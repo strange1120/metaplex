@@ -74,7 +74,7 @@ function App() {
           >
             <Box height="40px" />
             <Switch>
-              <Route path="/" component={Claim} />
+              <Route path="/claim" component={Claim} />
             </Switch>
             <Box height="80px" />
           </Box>
