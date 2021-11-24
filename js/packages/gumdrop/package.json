@@ -1,7 +1,6 @@
 {
   "name": "gumdrop",
   "version": "0.1.0",
-  "homepage": "https://www.jollysanta.dev/claim",
   "private": true,
   "dependencies": {
     "@aws-sdk/client-lambda": "^3.38.0",
