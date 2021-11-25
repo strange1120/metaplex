@@ -18,7 +18,7 @@ import {
   Stepper,
   TextField,
 } from '@mui/material';
-
+import { Settings } from './Settings';
 import { useWallet } from '@solana/wallet-adapter-react';
 import {
   Connection as RPCConnection,
@@ -60,6 +60,32 @@ import { MerkleTree } from '../utils/merkleTree';
 import { explorerLinkFor, sendSignedTransaction } from '../utils/transactions';
 import { chunk } from '../utils/claimant';
 import { coder } from '../utils/merkleDistributor';
+
+const getWindowDimensions = () => {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+};
+
+// eslint-disable-next-line
+const useWindowDimensions = () => {
+  const [windowDimensions, setWindowDimensions] = React.useState(
+    getWindowDimensions(),
+  );
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setWindowDimensions(getWindowDimensions());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return windowDimensions;
+};
 
 const walletKeyOrPda = async (
   walletKey: PublicKey,
@@ -1041,9 +1067,10 @@ export const Claim = (props: RouteComponentProps<ClaimProps>) => {
       }}
     />
   );
-
+  const { width } = useWindowDimensions();
   return (
     <Stack spacing={2}>
+      <Settings narrow={width < 670} />
       <Box sx={{ position: 'relative' }}>
         <Button
           disabled={!wallet.connected || !allFieldsPopulated || loading}
@@ -1078,7 +1105,9 @@ export const Claim = (props: RouteComponentProps<ClaimProps>) => {
             wrap();
           }}
         >
-          {asyncNeedsTemporalSigner ? 'Next' : 'Claim Gumdrop'}
+          {asyncNeedsTemporalSigner
+            ? 'Claim Jolly Santa NFT'
+            : 'Claim Jolly Santa NFT'}
         </Button>
         {loading && loadingProgress()}
       </Box>
