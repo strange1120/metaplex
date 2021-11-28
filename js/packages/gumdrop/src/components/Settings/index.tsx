@@ -90,7 +90,11 @@ export const Settings = () => {
             </Select>
           </FormControl>
           <Link underline="none">
-            <Button variant="contained" onClick={handleConnect}>
+            <Button
+              variant="contained"
+              onClick={handleConnect}
+              style={{ backgroundColor: 'black', color: 'white' }}
+            >
               Connect
             </Button>
           </Link>
@@ -103,6 +107,7 @@ export const Settings = () => {
               key={idx}
               variant="outlined"
               onClick={a.click}
+              style={{ backgroundColor: 'black', color: 'white' }}
               {...a.expandedExtra}
             >
               {a.inner()}
