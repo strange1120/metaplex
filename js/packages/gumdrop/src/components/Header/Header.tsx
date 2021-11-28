@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 
 import { Settings } from '../Settings';
 
-export const Header = ({ narrow }: { narrow: boolean }) => {
+export const Header = () => {
   return (
     <Box
       sx={{
@@ -14,7 +14,7 @@ export const Header = ({ narrow }: { narrow: boolean }) => {
       }}
     >
       <Box sx={{ flexGrow: 1, minWidth: '36px' }}></Box>
-      <Settings narrow={narrow} />
+      <Settings />
     </Box>
   );
 };
