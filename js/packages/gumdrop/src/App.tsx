@@ -6,6 +6,7 @@ import { Box } from '@mui/material';
 
 import './App.css';
 import { Claim } from './components/Claim';
+import { Search } from './components/Search';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           }}
         >
           <Switch>
+            <Route path="/" component={Search} />
             <Route path="/claim" component={Claim} />
           </Switch>
         </Box>

@@ -7,16 +7,8 @@ import {
   Box,
   Button,
   CircularProgress,
-  FormControl,
   Link as HyperLink,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
-  Step,
-  StepLabel,
-  Stepper,
-  TextField,
 } from '@mui/material';
 import { Settings } from './Settings';
 import { useWallet } from '@solana/wallet-adapter-react';

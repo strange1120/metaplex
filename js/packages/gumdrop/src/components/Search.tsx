@@ -1,0 +1,1109 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React from 'react';
+import { Field, Form, Formik } from 'formik';
+
+import { Button, Paper, Typography, Box } from '@material-ui/core';
+import _find from 'lodash/find';
+
+const distributionList = [
+  {
+    handle: '8sjTSA1iaFhLMP5dK1XSHDaRH3sJvX2YcKvmYhCSgCXe',
+    amount: 3,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=8sjTSA1iaFhLMP5dK1XSHDaRH3sJvX2YcKvmYhCSgCXe&amount=3&index=0&proof=3SuLVJFpYALi6RoqqJjiBKKa8NNqz9msNxaVo52zHMNo,9LFbZbqcdjrMLsFRDxV7RnLscJ5kvwYopdHqDJYeYyup,Exr9sJ9W6HScwyTxHJ1daizz42cFUipCvouVcBGto6AG,9BAA8FZsTBXFFNhB95E1PKeyXsDRLKXuTbL3oF2bdZcw,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4g3V7iZxNL54jK2kcr1CE24YaaiMmyxYStkLnPAdWyir',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4g3V7iZxNL54jK2kcr1CE24YaaiMmyxYStkLnPAdWyir&amount=2&index=1&proof=EZcJUFZdkCaabchxDbzZCT2xHNAccCtgpxHpxXKnkFDG,9LFbZbqcdjrMLsFRDxV7RnLscJ5kvwYopdHqDJYeYyup,Exr9sJ9W6HScwyTxHJ1daizz42cFUipCvouVcBGto6AG,9BAA8FZsTBXFFNhB95E1PKeyXsDRLKXuTbL3oF2bdZcw,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7emsCJK1YrXN3ag7QNWsoLUcfHL4sr1uRYoJzoDRjnUe',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7emsCJK1YrXN3ag7QNWsoLUcfHL4sr1uRYoJzoDRjnUe&amount=2&index=2&proof=HRz74wxokcfSu8muDZiQrBQsu3nzzvJ6tr6ZzC6gpvCZ,AJGhKJnMDc6udypoh4mcFhhcRe4a5GKskTi9AXdeLhBX,Exr9sJ9W6HScwyTxHJ1daizz42cFUipCvouVcBGto6AG,9BAA8FZsTBXFFNhB95E1PKeyXsDRLKXuTbL3oF2bdZcw,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6Psvzxzq63JEuSZTbhGamkgdbPutTPXCoryvv2BWUskn',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6Psvzxzq63JEuSZTbhGamkgdbPutTPXCoryvv2BWUskn&amount=2&index=3&proof=r8tSZiEXFxZ433zPbGaK1obrYMshoL9LSgw6EjGPmMC,AJGhKJnMDc6udypoh4mcFhhcRe4a5GKskTi9AXdeLhBX,Exr9sJ9W6HScwyTxHJ1daizz42cFUipCvouVcBGto6AG,9BAA8FZsTBXFFNhB95E1PKeyXsDRLKXuTbL3oF2bdZcw,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9cYTCXpGxCwrDSevcNUuKFV5ttmfmhhFaD37uyDhkNtf',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9cYTCXpGxCwrDSevcNUuKFV5ttmfmhhFaD37uyDhkNtf&amount=2&index=4&proof=B5AUhEkigErwmEh4r61hvh3Gcg3Yqe7psqneQgmvUwJa,E3xnx1Zh7VubhY6THj5rWLFRdZDJV4Bhes1Wf3SzW7v9,44GxP9YtbgQGrpuM3nphYHKYTG2f2WFTtUyhGGT8rRgR,9BAA8FZsTBXFFNhB95E1PKeyXsDRLKXuTbL3oF2bdZcw,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6XBqKV2nP9mVRqtnLASZG6z5tJevWjFgH7xv2AbTbf1C',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6XBqKV2nP9mVRqtnLASZG6z5tJevWjFgH7xv2AbTbf1C&amount=2&index=5&proof=DdrK9YanunEDAYjPKQ4SiHAncCood7dSBhXoFAqCbVGp,E3xnx1Zh7VubhY6THj5rWLFRdZDJV4Bhes1Wf3SzW7v9,44GxP9YtbgQGrpuM3nphYHKYTG2f2WFTtUyhGGT8rRgR,9BAA8FZsTBXFFNhB95E1PKeyXsDRLKXuTbL3oF2bdZcw,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Gj46zAo6BwFpBfUkcWqAJPcyyJeAUYZEx5DuVXRpQBZG',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Gj46zAo6BwFpBfUkcWqAJPcyyJeAUYZEx5DuVXRpQBZG&amount=2&index=6&proof=7rBE1MNPGseJEyce1M8gTeaMV8yCsr8oy4B4mtQ3r7jL,9qzUttFgPfimgHXLFcsZ1xEdXfXp621LTkJRQHoNELfU,44GxP9YtbgQGrpuM3nphYHKYTG2f2WFTtUyhGGT8rRgR,9BAA8FZsTBXFFNhB95E1PKeyXsDRLKXuTbL3oF2bdZcw,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '14MtW2tktdaL1rwrDj2PVXbom8DsjACwawqFFxewKqFm',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=14MtW2tktdaL1rwrDj2PVXbom8DsjACwawqFFxewKqFm&amount=2&index=7&proof=Ce9y9yDiWaqhkW7FabWauFSeYTfHjLaB9SGZQyAHNfyx,9qzUttFgPfimgHXLFcsZ1xEdXfXp621LTkJRQHoNELfU,44GxP9YtbgQGrpuM3nphYHKYTG2f2WFTtUyhGGT8rRgR,9BAA8FZsTBXFFNhB95E1PKeyXsDRLKXuTbL3oF2bdZcw,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4ALW9YB46qXmKHRBtnRj3XhxU49s87jKR4fEA2SXJBgW',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4ALW9YB46qXmKHRBtnRj3XhxU49s87jKR4fEA2SXJBgW&amount=2&index=8&proof=GXLSX3FjkFNc6wtk3svDivaCwyQswoJ7EQBk9y6BZATP,D5uZBMC4JBVZtYZnnQtCR4hNweZqHLKumrAU4Cr4wWj3,HkRmAq5eodaEpiX6Tq14CyQe9WY52pAjUgYMECagpNmv,8EikUNWL1CZDiz9Pwn9iebehnYEsPyzRoWfA3JNbKY5V,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EiUgCVsNwE91UCjB6JRk1VkwA9dy1xT2tjUedG8rhUy9',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EiUgCVsNwE91UCjB6JRk1VkwA9dy1xT2tjUedG8rhUy9&amount=2&index=9&proof=A8GpU5NY4D9s2eBBLNr277gXX38NkMCUXi5gyCFBJ6uL,D5uZBMC4JBVZtYZnnQtCR4hNweZqHLKumrAU4Cr4wWj3,HkRmAq5eodaEpiX6Tq14CyQe9WY52pAjUgYMECagpNmv,8EikUNWL1CZDiz9Pwn9iebehnYEsPyzRoWfA3JNbKY5V,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HtJkwFpSAVWMKkouDaZJmwNq25Fip5mk9WAjZKCd5kSC',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HtJkwFpSAVWMKkouDaZJmwNq25Fip5mk9WAjZKCd5kSC&amount=2&index=10&proof=AS9U876f5F7F9u9msCTG2CfKzNtHdLLSjywEJq7iDDfT,2NqQ1xQJuwsrovFAoVYHpyzrRV7seCxG4XV4hBLutDDj,HkRmAq5eodaEpiX6Tq14CyQe9WY52pAjUgYMECagpNmv,8EikUNWL1CZDiz9Pwn9iebehnYEsPyzRoWfA3JNbKY5V,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6ZZtngDhaFbGwkLgzNRjcKWD7j6quCCFJQ86KbzfapTY',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6ZZtngDhaFbGwkLgzNRjcKWD7j6quCCFJQ86KbzfapTY&amount=2&index=11&proof=33HCHso45hMQTHVt5oGTy5CjJHU6atgWhYjDqcKKFNEN,2NqQ1xQJuwsrovFAoVYHpyzrRV7seCxG4XV4hBLutDDj,HkRmAq5eodaEpiX6Tq14CyQe9WY52pAjUgYMECagpNmv,8EikUNWL1CZDiz9Pwn9iebehnYEsPyzRoWfA3JNbKY5V,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'ATvJN3HRgwyYzovXMUaD228KRevu8dd3q8VJ17323mH8',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=ATvJN3HRgwyYzovXMUaD228KRevu8dd3q8VJ17323mH8&amount=2&index=12&proof=DkcqefmqU5s6ayqWCBiRdibA3WQo53v53qxKnJCPKWm2,hb4XdT5Hf4dgLk2iz9CKa4dvdRgVZkYNUChQhvoeMg3,CVq4fvHMtFKGEtb3VHzabsFesZ7ekz1fsmwBodCSUAgq,8EikUNWL1CZDiz9Pwn9iebehnYEsPyzRoWfA3JNbKY5V,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'FfiBdbfa4cH9MmPEt1i7ZgFPCAK6Qjp3P4JZPVN1h4hP',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=FfiBdbfa4cH9MmPEt1i7ZgFPCAK6Qjp3P4JZPVN1h4hP&amount=2&index=13&proof=DRA5SJ4KBVRAcYye11NwhEvgEfa26QRPiwosGJwbkyX6,hb4XdT5Hf4dgLk2iz9CKa4dvdRgVZkYNUChQhvoeMg3,CVq4fvHMtFKGEtb3VHzabsFesZ7ekz1fsmwBodCSUAgq,8EikUNWL1CZDiz9Pwn9iebehnYEsPyzRoWfA3JNbKY5V,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'AKgm9LtJaBpVPKS944ZaKPiE6w9J3BLVivD1Q8p3QUU6',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=AKgm9LtJaBpVPKS944ZaKPiE6w9J3BLVivD1Q8p3QUU6&amount=2&index=14&proof=C6uhEJWQYXh4XcTV7oPhHAJEkGmrqkzqcTqH4qDy5ffY,8suQa6ZkbMVgGcRGjJsdJpxdaEG8jeWzmC9MwyfzCLRs,CVq4fvHMtFKGEtb3VHzabsFesZ7ekz1fsmwBodCSUAgq,8EikUNWL1CZDiz9Pwn9iebehnYEsPyzRoWfA3JNbKY5V,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9ZJLeepGnMWR6tfWCNUrVSoEyjCTPqNiUBUR74jTtkoA',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9ZJLeepGnMWR6tfWCNUrVSoEyjCTPqNiUBUR74jTtkoA&amount=2&index=15&proof=GJ2emV3UW9RLn5m768ih7uB52jmgDtHn5ZyCVSj1x6ge,8suQa6ZkbMVgGcRGjJsdJpxdaEG8jeWzmC9MwyfzCLRs,CVq4fvHMtFKGEtb3VHzabsFesZ7ekz1fsmwBodCSUAgq,8EikUNWL1CZDiz9Pwn9iebehnYEsPyzRoWfA3JNbKY5V,HqnRzGGu8Z1fQ9WjLQgcCJZrrBJpRhwfdftmsTbXJmBh,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9Tr5AddK992bJLiLeVx56t7Wfg48DgryuTenvCHhtRZc',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9Tr5AddK992bJLiLeVx56t7Wfg48DgryuTenvCHhtRZc&amount=2&index=16&proof=H6r19FxbvrH1HtRqLtEYP69dTLbKRabuFdxqd7tFeyMx,24QeDfCwrDFoK7RfzVd6hBqh3epxvxsgMKwt6r2yBGK8,39zUtoLnSwDPReAkEZUDPaZ9VqoMsssHU7g8SpHoKh4V,6L7JA4Fyq4xtWyBTpPL9zMwVLEmRNvWqKb7KL8oq5nAw,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2GrVjjrei2sy26sudUmg5wYyd11JW4w7oYGW27Jyg4Wk',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2GrVjjrei2sy26sudUmg5wYyd11JW4w7oYGW27Jyg4Wk&amount=2&index=17&proof=9F1xWEuJWrswhjBRRWgBGkx8oX1CB8TJx5wgoxvFjuMG,24QeDfCwrDFoK7RfzVd6hBqh3epxvxsgMKwt6r2yBGK8,39zUtoLnSwDPReAkEZUDPaZ9VqoMsssHU7g8SpHoKh4V,6L7JA4Fyq4xtWyBTpPL9zMwVLEmRNvWqKb7KL8oq5nAw,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CcsJphHLmHDjuTtD4PULFp6FVmvpVGARW8PDRfHcaKEc',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CcsJphHLmHDjuTtD4PULFp6FVmvpVGARW8PDRfHcaKEc&amount=2&index=18&proof=6VzRswiuxrmpSiZZ1FqAedMNK7pL7uNHENwze7CHaH5d,4yknScNrnDKhnjKuM2z8frLceWJpBwGPFQMQM1neEmZP,39zUtoLnSwDPReAkEZUDPaZ9VqoMsssHU7g8SpHoKh4V,6L7JA4Fyq4xtWyBTpPL9zMwVLEmRNvWqKb7KL8oq5nAw,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4nZQpBUMU4Ajp9ku6HGVm6cVZZiAEg6uNPdkhj7Z7Lcg',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4nZQpBUMU4Ajp9ku6HGVm6cVZZiAEg6uNPdkhj7Z7Lcg&amount=2&index=19&proof=7GZcTpve7qhd8zS4V8YEMaB43KYqooSFHFFfKRjugdDy,4yknScNrnDKhnjKuM2z8frLceWJpBwGPFQMQM1neEmZP,39zUtoLnSwDPReAkEZUDPaZ9VqoMsssHU7g8SpHoKh4V,6L7JA4Fyq4xtWyBTpPL9zMwVLEmRNvWqKb7KL8oq5nAw,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6cE1WYzJSvsK1ciU3z6bVzQmpeeqNFDLGhxZQsiEoS3t',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6cE1WYzJSvsK1ciU3z6bVzQmpeeqNFDLGhxZQsiEoS3t&amount=2&index=20&proof=H3XdJsyVDLcnGXKMBo6SYgenF5VLbu9juDYbUdfntzTo,CPeHY8oMSHqwyZ1joxRJ9PEjTTzdZvoiJDYoWyNfXf4s,E37G2hjov7XGYNYjah14uu4pb2Q9Uprqf6QacxKyKMyE,6L7JA4Fyq4xtWyBTpPL9zMwVLEmRNvWqKb7KL8oq5nAw,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '3EBCCYkSQXEDoqPKgrXENzaiXg6UVRpHV4TfY4vbFURt',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=3EBCCYkSQXEDoqPKgrXENzaiXg6UVRpHV4TfY4vbFURt&amount=2&index=21&proof=9nz8ihU2RSUeU4T5gZvMNjWJPnLJW1Uonoczm5oQipn5,CPeHY8oMSHqwyZ1joxRJ9PEjTTzdZvoiJDYoWyNfXf4s,E37G2hjov7XGYNYjah14uu4pb2Q9Uprqf6QacxKyKMyE,6L7JA4Fyq4xtWyBTpPL9zMwVLEmRNvWqKb7KL8oq5nAw,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'G9NSed9vwgwhzXXLxqRndm2y6ADqncDt5h6fTsDdtAuC',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=G9NSed9vwgwhzXXLxqRndm2y6ADqncDt5h6fTsDdtAuC&amount=2&index=22&proof=pKz3yyVVTn8QXrzR6oN7nP6n4ge2yF8vejT3Bf8bB1o,9qcym4caiQBifGgXSTtCTePqpgXLH1LHhJPzfcNjFRVn,E37G2hjov7XGYNYjah14uu4pb2Q9Uprqf6QacxKyKMyE,6L7JA4Fyq4xtWyBTpPL9zMwVLEmRNvWqKb7KL8oq5nAw,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'FvmRry3f6efwM25uSRmZgEATyTdaHo2JWCNtyDxpFKLf',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=FvmRry3f6efwM25uSRmZgEATyTdaHo2JWCNtyDxpFKLf&amount=2&index=23&proof=87qAtyij6N9gr6iMNWghRm2FxQ7m2Wpg3E38dw6H8upD,9qcym4caiQBifGgXSTtCTePqpgXLH1LHhJPzfcNjFRVn,E37G2hjov7XGYNYjah14uu4pb2Q9Uprqf6QacxKyKMyE,6L7JA4Fyq4xtWyBTpPL9zMwVLEmRNvWqKb7KL8oq5nAw,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '3MhCYVRsy5XEZWWAEFTz8QN5z9RGuZWZ7apjWL55nDv5',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=3MhCYVRsy5XEZWWAEFTz8QN5z9RGuZWZ7apjWL55nDv5&amount=2&index=24&proof=ExRgACHgds75TZ41D1jVyd22mswKVNQLGmfviVTLdDJb,43WvNtZVwR4pEJ3w1hKSUDCAgLqN3aikTQUWgvEe8oJh,8sYnS57ipA5MpJz4haj4nTZFWobFv1GJ2ecPL2qMELsz,6Brq4U1QH2WF5F51LrDWGS82WFDfwBqLpNDMt5XegBnK,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'xp1RJ6DQFFxwpC5VJPyvG6gm31BHRZuPwUUCUreC2bG',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=xp1RJ6DQFFxwpC5VJPyvG6gm31BHRZuPwUUCUreC2bG&amount=2&index=25&proof=6srfksT9LiFmntxzKFLY1bqgZ4sHCE6BmDCWznZGpjxg,43WvNtZVwR4pEJ3w1hKSUDCAgLqN3aikTQUWgvEe8oJh,8sYnS57ipA5MpJz4haj4nTZFWobFv1GJ2ecPL2qMELsz,6Brq4U1QH2WF5F51LrDWGS82WFDfwBqLpNDMt5XegBnK,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EdHfQtszCC3wSUPc46fknQ98gZ9kkscXGkSLRWNq9nCW',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EdHfQtszCC3wSUPc46fknQ98gZ9kkscXGkSLRWNq9nCW&amount=2&index=26&proof=bXy9NJQLhELgZUKtEUTRVv1idXDHVUMg5LQHFxK4Utk,6ZGEE2stp2WN7swioNcXRJCrWo5mPrWLUK2zC5N7imG3,8sYnS57ipA5MpJz4haj4nTZFWobFv1GJ2ecPL2qMELsz,6Brq4U1QH2WF5F51LrDWGS82WFDfwBqLpNDMt5XegBnK,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CaknYRMqaU1ohHKnmkYmMXAv25UHQxu6ek5XJ7zUNDbW',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CaknYRMqaU1ohHKnmkYmMXAv25UHQxu6ek5XJ7zUNDbW&amount=2&index=27&proof=2wveEXNSERTsWcENA4FpyheVykKUCE4GmqkZ7cfR3zWg,6ZGEE2stp2WN7swioNcXRJCrWo5mPrWLUK2zC5N7imG3,8sYnS57ipA5MpJz4haj4nTZFWobFv1GJ2ecPL2qMELsz,6Brq4U1QH2WF5F51LrDWGS82WFDfwBqLpNDMt5XegBnK,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7SJrExMivNWwU4YLi8ni3cFxSmPdsbP4MS62eXGxmSsi',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7SJrExMivNWwU4YLi8ni3cFxSmPdsbP4MS62eXGxmSsi&amount=2&index=28&proof=6U4vH3pw3fSHVDSuhjTnivf6cJ22VDr1gLaudfto7SF3,C6gcSwqF8Te2e1hYKYAcNG3dbX8jnhvkh1H3EYA6reqK,9XNCricspsjPahueDdF3VAiQojRaWKHE4JCm5Q6nhNjk,6Brq4U1QH2WF5F51LrDWGS82WFDfwBqLpNDMt5XegBnK,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'A6Y763WaxZ6Sbudtej3DzJb7Ci6Lbd9ZTJVPeYXMhvLQ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=A6Y763WaxZ6Sbudtej3DzJb7Ci6Lbd9ZTJVPeYXMhvLQ&amount=2&index=29&proof=Hv9Fp5brQfCw4Rk9eTT3cy254tPWDQLeLY3vFUjezA1v,C6gcSwqF8Te2e1hYKYAcNG3dbX8jnhvkh1H3EYA6reqK,9XNCricspsjPahueDdF3VAiQojRaWKHE4JCm5Q6nhNjk,6Brq4U1QH2WF5F51LrDWGS82WFDfwBqLpNDMt5XegBnK,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CejqaZQeG4Y1QrW2KNtV3iwiMGiLfKGUeoPRobkU8xQh',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CejqaZQeG4Y1QrW2KNtV3iwiMGiLfKGUeoPRobkU8xQh&amount=2&index=30&proof=4erKSdcnSNVa4Y7XTU1hFKTFH1uFNPFXdQebaxia7xM6,AdqBWFDgfDKdHVshMBQBa1CqwRZY9DNeo7zcrmMGwVip,9XNCricspsjPahueDdF3VAiQojRaWKHE4JCm5Q6nhNjk,6Brq4U1QH2WF5F51LrDWGS82WFDfwBqLpNDMt5XegBnK,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HuvNpsmWRV9kaCKJ96hTNSSfEtYvoDm5JN3UF5ckHMoz',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HuvNpsmWRV9kaCKJ96hTNSSfEtYvoDm5JN3UF5ckHMoz&amount=2&index=31&proof=EqsBFZ7NdxVrX6FHBTsXExUscZ7eJYhEY11DEWaUPDfU,AdqBWFDgfDKdHVshMBQBa1CqwRZY9DNeo7zcrmMGwVip,9XNCricspsjPahueDdF3VAiQojRaWKHE4JCm5Q6nhNjk,6Brq4U1QH2WF5F51LrDWGS82WFDfwBqLpNDMt5XegBnK,Cy8i2Pjygyz83PdmemC3NGbRo2Cj4C5AUEKfm3y1WFfC,6yMm9XD3e4SWpv6XSZhcHD3woXppHzwSD8975FqmihRY,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EJQsyd2442aMBNf1kGgx6rqMXRbmxxXJja3AQRtP5vzz',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EJQsyd2442aMBNf1kGgx6rqMXRbmxxXJja3AQRtP5vzz&amount=2&index=32&proof=2s16iVbMgBUHPsceFhwCHeKkqQ1yidHeRMnw5BkftHc7,7yZ61gsZdhEQuXzHdGd1ViDVCuiPCviX3gCDgFAaGAmu,Bg3B8Gcr7sThS1NmDfAghxvP5UqUzzFy3xdVXXHMQ71n,4zZD4sJDVyf1uKLBmpYYxrs4tBUSbi1pR2WFyCcsgbMj,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5zuREoP5NtiiNtfmU4dhSjt7S2dSAmF8Ah4pePHc4Yuk',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5zuREoP5NtiiNtfmU4dhSjt7S2dSAmF8Ah4pePHc4Yuk&amount=2&index=33&proof=7cJuWiYoohnP7Kr4aMikngWB6XL5vU9sFX7ovVvZCH7M,7yZ61gsZdhEQuXzHdGd1ViDVCuiPCviX3gCDgFAaGAmu,Bg3B8Gcr7sThS1NmDfAghxvP5UqUzzFy3xdVXXHMQ71n,4zZD4sJDVyf1uKLBmpYYxrs4tBUSbi1pR2WFyCcsgbMj,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '8YquKmTPC6FkqCsTBQByEaqPfX2f5LHxjKJUzHmE6snw',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=8YquKmTPC6FkqCsTBQByEaqPfX2f5LHxjKJUzHmE6snw&amount=2&index=34&proof=DLSjkqsfKCNZztC711swKiwEoLyr446rL1uXy9JDCi5d,42LEBH5SDFgm9tQDTbnPihVcwXgbq6fxzzbW4Tx8Fzqn,Bg3B8Gcr7sThS1NmDfAghxvP5UqUzzFy3xdVXXHMQ71n,4zZD4sJDVyf1uKLBmpYYxrs4tBUSbi1pR2WFyCcsgbMj,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5fnLi3mjDMDZRLQYHXYAFU7uWvzMcJUZxD4AKvctMQJq',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5fnLi3mjDMDZRLQYHXYAFU7uWvzMcJUZxD4AKvctMQJq&amount=2&index=35&proof=43ejxc6tYQxahoCKUH2z88UX6QigpWQVgxKYoZ7SH2zv,42LEBH5SDFgm9tQDTbnPihVcwXgbq6fxzzbW4Tx8Fzqn,Bg3B8Gcr7sThS1NmDfAghxvP5UqUzzFy3xdVXXHMQ71n,4zZD4sJDVyf1uKLBmpYYxrs4tBUSbi1pR2WFyCcsgbMj,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'J8uN1qvz4WC182iTyw6kYBg99h8GCagDJuS7JwBnN22H',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=J8uN1qvz4WC182iTyw6kYBg99h8GCagDJuS7JwBnN22H&amount=2&index=36&proof=GPMCbzf59zVSFiZWFD6RuqUBmbTU9Pp8Bi75i5Ah3AUQ,GoKGGcqNkMttMPb2grJqqoLUxgMvDFw8chPRSyNpRmFD,4Rk4MKiYAWXyv1AKeiaCGPS453FXbgWQir3XMqy6SqGE,4zZD4sJDVyf1uKLBmpYYxrs4tBUSbi1pR2WFyCcsgbMj,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6zD2SBhuNgnpoBvxFnEztavUX5CBMJ6Y72Hu13iqdYCj',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6zD2SBhuNgnpoBvxFnEztavUX5CBMJ6Y72Hu13iqdYCj&amount=2&index=37&proof=7xRdTqnS9kpYxqpSyQUNmhjo7Suu1avPbKncXyXPcjQR,GoKGGcqNkMttMPb2grJqqoLUxgMvDFw8chPRSyNpRmFD,4Rk4MKiYAWXyv1AKeiaCGPS453FXbgWQir3XMqy6SqGE,4zZD4sJDVyf1uKLBmpYYxrs4tBUSbi1pR2WFyCcsgbMj,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'GT1f86ZYUUxLq73MSM8fghgmmMc5NLCrxip2Fj5f8pxJ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=GT1f86ZYUUxLq73MSM8fghgmmMc5NLCrxip2Fj5f8pxJ&amount=2&index=38&proof=4LhWkzr7ohRWhCCFA7wJLBZn5WuM4N28jqNp6FeDcom4,D3A9MjNMNRNg221Tke619wC6BMyoNxzwGdSwbiH2CZqi,4Rk4MKiYAWXyv1AKeiaCGPS453FXbgWQir3XMqy6SqGE,4zZD4sJDVyf1uKLBmpYYxrs4tBUSbi1pR2WFyCcsgbMj,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7aDKoTLFXD4eiwuKYzi1qy8wypvgmkn6m13NBggSxgKr',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7aDKoTLFXD4eiwuKYzi1qy8wypvgmkn6m13NBggSxgKr&amount=2&index=39&proof=75kWV3qmSEpwf1oNctppkcqUNMee1XY7uQrsYe31XK5s,D3A9MjNMNRNg221Tke619wC6BMyoNxzwGdSwbiH2CZqi,4Rk4MKiYAWXyv1AKeiaCGPS453FXbgWQir3XMqy6SqGE,4zZD4sJDVyf1uKLBmpYYxrs4tBUSbi1pR2WFyCcsgbMj,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '8vhsPJzkY7HoCjbVAt9uLEGpHRJwBV2JiKkxXtDTsGC2',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=8vhsPJzkY7HoCjbVAt9uLEGpHRJwBV2JiKkxXtDTsGC2&amount=2&index=40&proof=9x8U7seroTndZrwQjTVSUNMRFkGrMYMfPXJXxDAgJw2d,BD4Dz6vxnHPPMFbtXKfUMoQdub8KN2DVyzjWFsk18JKM,99F8pqqbzJuMpTPVuCRkyzwR1WtzWAp7HtwgDfY7bUuH,HoY9JW5CHL8QmMvfv4RQQkHaoaHuQ3cpJ9UUKPLr1o8o,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '39yusPnNeKp8yLGj5QK6J7owb24bcW3KDEMN1im5ZJKz',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=39yusPnNeKp8yLGj5QK6J7owb24bcW3KDEMN1im5ZJKz&amount=2&index=41&proof=6oECpUM9jdJZjwnu6VyAGEpbs3vT8EnfYEYNyXkRk1qB,BD4Dz6vxnHPPMFbtXKfUMoQdub8KN2DVyzjWFsk18JKM,99F8pqqbzJuMpTPVuCRkyzwR1WtzWAp7HtwgDfY7bUuH,HoY9JW5CHL8QmMvfv4RQQkHaoaHuQ3cpJ9UUKPLr1o8o,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'BRLw7JFxEnKk9QT71rHYWqjhpRtYNbfWuPc6fe4gpxgQ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=BRLw7JFxEnKk9QT71rHYWqjhpRtYNbfWuPc6fe4gpxgQ&amount=2&index=42&proof=B9EF1LgDpC7XW2jEKju2YFReybsZUVR4BBfZeMQqUVLm,FhkE9Ho3SooDeEHrtvrnVgbybt9yodxAAJimDEhRe9w,99F8pqqbzJuMpTPVuCRkyzwR1WtzWAp7HtwgDfY7bUuH,HoY9JW5CHL8QmMvfv4RQQkHaoaHuQ3cpJ9UUKPLr1o8o,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EhQSpSLSayDzp1BE9h6qqBF7NPRkazmCHqfaFDQieQHF',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EhQSpSLSayDzp1BE9h6qqBF7NPRkazmCHqfaFDQieQHF&amount=2&index=43&proof=DMEvMJf6kXg29gz92bVDXmrdiPbTRdepWqwF84Vi2wk4,FhkE9Ho3SooDeEHrtvrnVgbybt9yodxAAJimDEhRe9w,99F8pqqbzJuMpTPVuCRkyzwR1WtzWAp7HtwgDfY7bUuH,HoY9JW5CHL8QmMvfv4RQQkHaoaHuQ3cpJ9UUKPLr1o8o,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'FmFmMnnDh2VHGKKcU44Twn1Y1zbSMh5aPtT6Y5rDVFtt',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=FmFmMnnDh2VHGKKcU44Twn1Y1zbSMh5aPtT6Y5rDVFtt&amount=2&index=44&proof=EwpYffg739PaKhhKHB8dnbNZQLcc4C9pusqj6mBBMWhx,Bv89scR1XpB6GJ7asp1Gv1jM1VRvVWgercAnZbn5MLAL,5czc6hEGSde8bNjMNwr3ypgmb4Vpxo8A8SawmKKY9zLY,HoY9JW5CHL8QmMvfv4RQQkHaoaHuQ3cpJ9UUKPLr1o8o,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'BDcpPuHwW4yJcVbkkG9tnSVFbJXjxKhA5uEbTqPty2t',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=BDcpPuHwW4yJcVbkkG9tnSVFbJXjxKhA5uEbTqPty2t&amount=2&index=45&proof=3c5zcmjnufMEtz6VvVWwiDVkUCxg1qbDad7ceimxoy6m,Bv89scR1XpB6GJ7asp1Gv1jM1VRvVWgercAnZbn5MLAL,5czc6hEGSde8bNjMNwr3ypgmb4Vpxo8A8SawmKKY9zLY,HoY9JW5CHL8QmMvfv4RQQkHaoaHuQ3cpJ9UUKPLr1o8o,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '84dupfrUoDVbQej32kXkr4qguNP3cTXkE6ZMuPnrdjhp',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=84dupfrUoDVbQej32kXkr4qguNP3cTXkE6ZMuPnrdjhp&amount=2&index=46&proof=7rNubyhyf26GZFi9xLqP73uobobas3gZa448VN5qzdx2,4vezAFQfCCWMWmNryVi24vSRh8C2tG5MHPhcxcpmpMRH,5czc6hEGSde8bNjMNwr3ypgmb4Vpxo8A8SawmKKY9zLY,HoY9JW5CHL8QmMvfv4RQQkHaoaHuQ3cpJ9UUKPLr1o8o,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'BzZdqQGkma7Te97i19xhceZStmdU1jJpPyH7Vfa6ezk1',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=BzZdqQGkma7Te97i19xhceZStmdU1jJpPyH7Vfa6ezk1&amount=2&index=47&proof=5hCqkJknaqXfebb4mRwhUKeLuNf5DjKK33UbFpoxEsFd,4vezAFQfCCWMWmNryVi24vSRh8C2tG5MHPhcxcpmpMRH,5czc6hEGSde8bNjMNwr3ypgmb4Vpxo8A8SawmKKY9zLY,HoY9JW5CHL8QmMvfv4RQQkHaoaHuQ3cpJ9UUKPLr1o8o,CHyqpj2V4WMy1ZR47VTYRoidRNVwNPozbh9PEXkvYSKc,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2MRJRubKrEtqmggh95ar3W5fiQ7mpKcyouQpdeRKhadV',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2MRJRubKrEtqmggh95ar3W5fiQ7mpKcyouQpdeRKhadV&amount=2&index=48&proof=CfK8WZv1gjXYxEemeYNHjYnWZGXxd7x4FHtneTH4awUh,Ei3ib4PjG1WpsEEJPyRZnyisGJgrxeHDo5EdB5TryqbF,B9FFVLosVRwAwDHD8ArotqRpNQdvS1QbdEqoQiwfQXkg,D8KnwavJdYyt4RAokpupRGB9oc8ouGFLiLzjkXgDWTVP,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EjYxT1DR1NHVPLdtKLQHDt2MhG62DBmueCFrqjNP3NXp',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EjYxT1DR1NHVPLdtKLQHDt2MhG62DBmueCFrqjNP3NXp&amount=2&index=49&proof=7iDbPRmGqh7pKNFkgkG8F77ojyq8WFuxnGuDfC5eUrzq,Ei3ib4PjG1WpsEEJPyRZnyisGJgrxeHDo5EdB5TryqbF,B9FFVLosVRwAwDHD8ArotqRpNQdvS1QbdEqoQiwfQXkg,D8KnwavJdYyt4RAokpupRGB9oc8ouGFLiLzjkXgDWTVP,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EW6XbAYpecDknL4sSEFBjoPdGiU9kHi1wqfePC262D2x',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EW6XbAYpecDknL4sSEFBjoPdGiU9kHi1wqfePC262D2x&amount=2&index=50&proof=GCvBtxt86vvoYMc3KZqsN14w4KER266CVGsjBHH7rMnd,3rE3HwQPC24pW7nN8JzjSvsWSgriRpVZ9PtHt6mr9bUM,B9FFVLosVRwAwDHD8ArotqRpNQdvS1QbdEqoQiwfQXkg,D8KnwavJdYyt4RAokpupRGB9oc8ouGFLiLzjkXgDWTVP,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'BNnePkxizMNmjok33YgXnW1SFWXHbVjbWF7q9Q9rCtbN',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=BNnePkxizMNmjok33YgXnW1SFWXHbVjbWF7q9Q9rCtbN&amount=2&index=51&proof=9mrUzEYMmBDXXecQHWzuhYeKiYWt2SVx82rTABpZSUCt,3rE3HwQPC24pW7nN8JzjSvsWSgriRpVZ9PtHt6mr9bUM,B9FFVLosVRwAwDHD8ArotqRpNQdvS1QbdEqoQiwfQXkg,D8KnwavJdYyt4RAokpupRGB9oc8ouGFLiLzjkXgDWTVP,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CUTdJZoR2LqNWrUBWMCyPYcYBwRiw2tYtzRUEHbTHzUA',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CUTdJZoR2LqNWrUBWMCyPYcYBwRiw2tYtzRUEHbTHzUA&amount=2&index=52&proof=CP1YU5YKeXMvPML9N1mcFUpqrwAvhLPbSgwBsaCFv5Yc,Hk5HwKqRYuz6msvTVXrysAHWEUdHAyiRSzd5LybGX1ZU,EnWTwrX7whz4YV2GVFjeJs6AaJj4emAiJvZNq2H54GQ1,D8KnwavJdYyt4RAokpupRGB9oc8ouGFLiLzjkXgDWTVP,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CNs2VhqvQHnu2dpnSNwkooG7oJiJPB4FiUotzWMy5xRu',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CNs2VhqvQHnu2dpnSNwkooG7oJiJPB4FiUotzWMy5xRu&amount=2&index=53&proof=CuQ6UxMuyw6mCwP2FQKYYBs9YkfqkYRqjETY5M1EVrTW,Hk5HwKqRYuz6msvTVXrysAHWEUdHAyiRSzd5LybGX1ZU,EnWTwrX7whz4YV2GVFjeJs6AaJj4emAiJvZNq2H54GQ1,D8KnwavJdYyt4RAokpupRGB9oc8ouGFLiLzjkXgDWTVP,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6KmbCmRBUyHJ6xNcW8BLVfAoYw9ZGgpWnzGhNbY9kATA',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6KmbCmRBUyHJ6xNcW8BLVfAoYw9ZGgpWnzGhNbY9kATA&amount=2&index=54&proof=CnxErZxSqzU6ciUNYZxrcnWSJZVcYtP4KqKZacT2E2t,EzyqUeLPJ8NiM9iS3t9QpiAfDK1kbvbaPUGKuXtKintM,EnWTwrX7whz4YV2GVFjeJs6AaJj4emAiJvZNq2H54GQ1,D8KnwavJdYyt4RAokpupRGB9oc8ouGFLiLzjkXgDWTVP,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'H6xstGDe1BriFFpc7esqiN6hxegjEuTFGkwTf46qXusw',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=H6xstGDe1BriFFpc7esqiN6hxegjEuTFGkwTf46qXusw&amount=2&index=55&proof=5dnVgoUxmR3NDs5SzWreBpR1NgGuDcPsgVKHkhsszuwo,EzyqUeLPJ8NiM9iS3t9QpiAfDK1kbvbaPUGKuXtKintM,EnWTwrX7whz4YV2GVFjeJs6AaJj4emAiJvZNq2H54GQ1,D8KnwavJdYyt4RAokpupRGB9oc8ouGFLiLzjkXgDWTVP,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4MkhanVro9b1rQ3s71K3MAYfQXfKspAAyJn7W3vzAU1w',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4MkhanVro9b1rQ3s71K3MAYfQXfKspAAyJn7W3vzAU1w&amount=2&index=56&proof=37JDdArgzkR5L4DeeBpMVJ8SYiDJjYZ7rF1tzSMYv5zQ,FF2VzHL3F4BpurEZdfYs9ZD1f173Lb8K9qng3d1m8q93,HpDTyy3z3y3A2bq9AAofRyrj3X6QrcFrFMC3yhieNABt,AJEjXMaauNFQgNujnswU5N5MVFvXbqAPrb2emhib3eac,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'FME7wtdvbtr4TfVfYz49ck9QQ4q8uwKFrJqj7xiHoVYn',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=FME7wtdvbtr4TfVfYz49ck9QQ4q8uwKFrJqj7xiHoVYn&amount=2&index=57&proof=CqRMjDrT2H33XHEs2m3kKDAQusBzZGwLTs9Q4pEvnmPh,FF2VzHL3F4BpurEZdfYs9ZD1f173Lb8K9qng3d1m8q93,HpDTyy3z3y3A2bq9AAofRyrj3X6QrcFrFMC3yhieNABt,AJEjXMaauNFQgNujnswU5N5MVFvXbqAPrb2emhib3eac,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'KCfH6RP2FDGo7nBaU8hPWNZg6VHMgCWGWrUYafvfrrE',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=KCfH6RP2FDGo7nBaU8hPWNZg6VHMgCWGWrUYafvfrrE&amount=2&index=58&proof=F2F3qTntyFCfqbQFGt7Awd2ai71EpfoKv4YnuumWa8dZ,3MiQRRaQVo5fpRStBsWgMvpaXT6NonG4CdEuYrRuMQW5,HpDTyy3z3y3A2bq9AAofRyrj3X6QrcFrFMC3yhieNABt,AJEjXMaauNFQgNujnswU5N5MVFvXbqAPrb2emhib3eac,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5p8GWjkVAXV5ARHYqjHDDTbbHJ3KxdZTugq7nLbRo5x7',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5p8GWjkVAXV5ARHYqjHDDTbbHJ3KxdZTugq7nLbRo5x7&amount=2&index=59&proof=5Pu3ijPRDBiBhqmMpCMFTa4zNBZ8gdnPZp5zY4DpB1u5,3MiQRRaQVo5fpRStBsWgMvpaXT6NonG4CdEuYrRuMQW5,HpDTyy3z3y3A2bq9AAofRyrj3X6QrcFrFMC3yhieNABt,AJEjXMaauNFQgNujnswU5N5MVFvXbqAPrb2emhib3eac,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9iSx8HtFiYW7usC1aDjj8FxRXpvmT4jmTwNKe8vfqwmZ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9iSx8HtFiYW7usC1aDjj8FxRXpvmT4jmTwNKe8vfqwmZ&amount=2&index=60&proof=3qNxRKnfLXUGr1yCkw6rXs3huDSPknwF2mA9qZFosLtr,9Rv35tKS7pvTPV9pDZHsj6JoebXYyogZ8LirA1FuVSAT,SNYsgoMfuP42KaSMsxKqvjUnodm1S2R4NMpai1rJGzD,AJEjXMaauNFQgNujnswU5N5MVFvXbqAPrb2emhib3eac,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Gq8eyAVtTHAonSdf7AtQdh3AVoyYbhQw5CizUa341o3R',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Gq8eyAVtTHAonSdf7AtQdh3AVoyYbhQw5CizUa341o3R&amount=2&index=61&proof=4ECmLzArDRDCFGJQYguyuNzM32JkDiwTEH7cFhE1AMA2,9Rv35tKS7pvTPV9pDZHsj6JoebXYyogZ8LirA1FuVSAT,SNYsgoMfuP42KaSMsxKqvjUnodm1S2R4NMpai1rJGzD,AJEjXMaauNFQgNujnswU5N5MVFvXbqAPrb2emhib3eac,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'GvWg2CMsxtJVYK5DftTXu8rVeRGdaHK6Bp5fxVWJgghP',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=GvWg2CMsxtJVYK5DftTXu8rVeRGdaHK6Bp5fxVWJgghP&amount=2&index=62&proof=B2x1nQsxzyidZEG7GccvFyKdFxwdgM5iWrF3zuxNzzK3,52HvTE47XE9aaGxnjHMaHbqGHN4uS4q8zvGRL9QAMXWW,SNYsgoMfuP42KaSMsxKqvjUnodm1S2R4NMpai1rJGzD,AJEjXMaauNFQgNujnswU5N5MVFvXbqAPrb2emhib3eac,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9Wd2pKPUYJewa2UWeJC9136fzc5AJFb1azGMs7LH74H3',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9Wd2pKPUYJewa2UWeJC9136fzc5AJFb1azGMs7LH74H3&amount=2&index=63&proof=BnDPFrLzHktQPhr4ruHyfkTmChVkXdqU5AgM6qCynibq,52HvTE47XE9aaGxnjHMaHbqGHN4uS4q8zvGRL9QAMXWW,SNYsgoMfuP42KaSMsxKqvjUnodm1S2R4NMpai1rJGzD,AJEjXMaauNFQgNujnswU5N5MVFvXbqAPrb2emhib3eac,HN987gxahyJgdZaXzBqgzPoZaJyWzTEYKYkYtRXBrdc7,7LaesdCSkcWYXLPY2uGRJ3rF3vGWGKDzgfEeYDMFebQP,4VfUXhJoW2vL1sX2ZNdfWXbGscrGFaeahSBDFjoQZpbi,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6gTzD5iwgCvsTu8vCciakiL35ffytTg5gGrqHRbS8fST',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6gTzD5iwgCvsTu8vCciakiL35ffytTg5gGrqHRbS8fST&amount=2&index=64&proof=CfavqEGKJMaBTHpNBs398ZLWk1Vmq4SDDRqU5P3cFgnv,D8cnmxw4eLdNPoF1sNchA2SCEPSAJFMNQkmNaLi69vNq,6VcrbpP6vTiyUVm5kAzB81b6qqFw98KU7cqbuaeKKZkh,6kwF7kygQg4v97y8rCPQajHS2dZFPfKtSfxgunffritz,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'DwURCJc8fTpCNPGzakmRnVKZJ2epnzLD6zwYgWyM9hvA',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=DwURCJc8fTpCNPGzakmRnVKZJ2epnzLD6zwYgWyM9hvA&amount=2&index=65&proof=FLZuuCcyk1sq5T4qeFRtwX3geDbhyJisEUarEQcoRWHh,D8cnmxw4eLdNPoF1sNchA2SCEPSAJFMNQkmNaLi69vNq,6VcrbpP6vTiyUVm5kAzB81b6qqFw98KU7cqbuaeKKZkh,6kwF7kygQg4v97y8rCPQajHS2dZFPfKtSfxgunffritz,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5yamTChEtP2X7CGWeXqaKGPnKcxqCAQvC9pv2rsKq6sh',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5yamTChEtP2X7CGWeXqaKGPnKcxqCAQvC9pv2rsKq6sh&amount=2&index=66&proof=8neDS6jaDDQU5rFkR3UEzEdPMYmZNY6Mu7zqjFL7ycZe,FmgVB6RX8JJic2Khw9AHQzaW8oymcKfP9txsAFqJvt8E,6VcrbpP6vTiyUVm5kAzB81b6qqFw98KU7cqbuaeKKZkh,6kwF7kygQg4v97y8rCPQajHS2dZFPfKtSfxgunffritz,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2xsvciS4oUufdoKvfFMM34DXov5Zz8PHxnbKhP2ArSe5',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2xsvciS4oUufdoKvfFMM34DXov5Zz8PHxnbKhP2ArSe5&amount=2&index=67&proof=F9M2M5mhecgXo6jDX1uTUL9LgunDQq8mawTvMKKVvzML,FmgVB6RX8JJic2Khw9AHQzaW8oymcKfP9txsAFqJvt8E,6VcrbpP6vTiyUVm5kAzB81b6qqFw98KU7cqbuaeKKZkh,6kwF7kygQg4v97y8rCPQajHS2dZFPfKtSfxgunffritz,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6aGXtzR1dNuPodeunXnyc3LHDHeuztXoX8jwhB5BDaac',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6aGXtzR1dNuPodeunXnyc3LHDHeuztXoX8jwhB5BDaac&amount=2&index=68&proof=8LyUxJ2MtNMBsu784BbYTECqxMXaPL8HgyjT4vNQi1KZ,6zp5GFySo1PA22F6h1ryQEVwjguDtBj88caZXtLP4ErA,CNyBRwJrrjDxGXaqjDbCmNSkXDcjb4cdWRXaFfKxFJot,6kwF7kygQg4v97y8rCPQajHS2dZFPfKtSfxgunffritz,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EnpL3YHZmW1nVSokzwz1JryoS5vTb6Cu2HPfux4dgjNE',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EnpL3YHZmW1nVSokzwz1JryoS5vTb6Cu2HPfux4dgjNE&amount=2&index=69&proof=F1Ukg6HsRyemZRH5bFfnH7iVdsyGSCv2zdVU1KGbAabS,6zp5GFySo1PA22F6h1ryQEVwjguDtBj88caZXtLP4ErA,CNyBRwJrrjDxGXaqjDbCmNSkXDcjb4cdWRXaFfKxFJot,6kwF7kygQg4v97y8rCPQajHS2dZFPfKtSfxgunffritz,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4RvLCZrN5WCb7sfR82ym2noZsp8sA2ipGjrgvmK5RnEo',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4RvLCZrN5WCb7sfR82ym2noZsp8sA2ipGjrgvmK5RnEo&amount=2&index=70&proof=HZF8PMrF1mBQeq28hPAXzu7pwoveKPbNyPPY5s1LcRCb,ES4Da6QjMmgPwMKAkbcL69qdHm3Y5r8xNrsEFs4vdhg6,CNyBRwJrrjDxGXaqjDbCmNSkXDcjb4cdWRXaFfKxFJot,6kwF7kygQg4v97y8rCPQajHS2dZFPfKtSfxgunffritz,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5ryNehsXYL7bTqXaYTwavhGxSRQQMegrepscF263q2aw',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5ryNehsXYL7bTqXaYTwavhGxSRQQMegrepscF263q2aw&amount=2&index=71&proof=4sYrkfnSaHLycZfruzhKPzZa1GStGvYTXYaa8KYcGL5k,ES4Da6QjMmgPwMKAkbcL69qdHm3Y5r8xNrsEFs4vdhg6,CNyBRwJrrjDxGXaqjDbCmNSkXDcjb4cdWRXaFfKxFJot,6kwF7kygQg4v97y8rCPQajHS2dZFPfKtSfxgunffritz,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'e21m1CMmNmRWdMrRmcNTdh47ikzA6RhoAKuSLSdHtHM',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=e21m1CMmNmRWdMrRmcNTdh47ikzA6RhoAKuSLSdHtHM&amount=2&index=72&proof=Fspxfv4cMDTi4wiBjH1unWiMGc6b6gaEBaKcUNdhVrSN,BjiV4UMqFstCSmKuHQSAquu9q31yHuBnih8qPFELWQSi,CQCUeKi6rDRL7d4mLs78KmWU8yBqRzb2xgvZea9qGe2K,89Xaaw6fodRjnrBP9WMxM9wPQ8SeUWfpXrMSX2fkkaXf,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'A4nZ477UeF6aKJLR2CoGxZFdw7HgRxtSnKHwbzb9ZDtz',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=A4nZ477UeF6aKJLR2CoGxZFdw7HgRxtSnKHwbzb9ZDtz&amount=2&index=73&proof=3F75HZcR4e9YtKeERXPKHCRCTA3eeuqcY8Yf5hLbVJgn,BjiV4UMqFstCSmKuHQSAquu9q31yHuBnih8qPFELWQSi,CQCUeKi6rDRL7d4mLs78KmWU8yBqRzb2xgvZea9qGe2K,89Xaaw6fodRjnrBP9WMxM9wPQ8SeUWfpXrMSX2fkkaXf,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '8nvqZe7WLrAZ2duqa3UGt9GGpoz9HZRweL7obePYPhne',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=8nvqZe7WLrAZ2duqa3UGt9GGpoz9HZRweL7obePYPhne&amount=2&index=74&proof=6aVNx5i2L6HBb9jbTc5TXXS8aKkZKQYENGFmpHzPChYk,GFdMWveqjNfRjHnkTTDRDVBH3fyeKJuHFNacqZMziB3h,CQCUeKi6rDRL7d4mLs78KmWU8yBqRzb2xgvZea9qGe2K,89Xaaw6fodRjnrBP9WMxM9wPQ8SeUWfpXrMSX2fkkaXf,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'BZ1V5kTiZtpswaiwm85VsEwKpTSP3YmUv1ELujz4FA4m',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=BZ1V5kTiZtpswaiwm85VsEwKpTSP3YmUv1ELujz4FA4m&amount=2&index=75&proof=Aw6ZQa5bFB9pcxjBgVK5JRxLs7kZMV5N8U2niQZFHV1W,GFdMWveqjNfRjHnkTTDRDVBH3fyeKJuHFNacqZMziB3h,CQCUeKi6rDRL7d4mLs78KmWU8yBqRzb2xgvZea9qGe2K,89Xaaw6fodRjnrBP9WMxM9wPQ8SeUWfpXrMSX2fkkaXf,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'B3b7z9AJ3WvuUdCJ9tvzVKm8R4Db2SHN9YXQkJhLYSWo',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=B3b7z9AJ3WvuUdCJ9tvzVKm8R4Db2SHN9YXQkJhLYSWo&amount=2&index=76&proof=FdT8YJmRKZkGgZ1Q32moL4MhQuGDKLvNjNydVXHSfpFc,2Deyhk4CriZF2DhwGjrKH7Nn5nLwf2zXkA9pEh8EM8f2,GMiziLLZw4ws18bK5LG76SEKbgu2gCRVcT93BEUmcTjD,89Xaaw6fodRjnrBP9WMxM9wPQ8SeUWfpXrMSX2fkkaXf,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '59aQhTJbwE1Sg9kP32VjGUrC6rDaUuhLpKpavsM57NmM',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=59aQhTJbwE1Sg9kP32VjGUrC6rDaUuhLpKpavsM57NmM&amount=2&index=77&proof=8gP2VJU15CZd9RccMPkXyxgwTvAZx1jbrCVuqf1iCX38,2Deyhk4CriZF2DhwGjrKH7Nn5nLwf2zXkA9pEh8EM8f2,GMiziLLZw4ws18bK5LG76SEKbgu2gCRVcT93BEUmcTjD,89Xaaw6fodRjnrBP9WMxM9wPQ8SeUWfpXrMSX2fkkaXf,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'DgdbuMV7KecA7ppzzkM5o9YCUNTkvbMJH12vN4UGzYPx',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=DgdbuMV7KecA7ppzzkM5o9YCUNTkvbMJH12vN4UGzYPx&amount=2&index=78&proof=4tP7ktwMc4QqrNEqmsJQrQ2h6RGUEZGSFGmobv75c9Vz,59baSxQgG7qpvB35KPyMpP8KkPa5F15W7t3R9E9FJcS2,GMiziLLZw4ws18bK5LG76SEKbgu2gCRVcT93BEUmcTjD,89Xaaw6fodRjnrBP9WMxM9wPQ8SeUWfpXrMSX2fkkaXf,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9wF75JCCiMYnJBRN8zX47K9LMUjynpeW7CTCZ4UE2mPY',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9wF75JCCiMYnJBRN8zX47K9LMUjynpeW7CTCZ4UE2mPY&amount=2&index=79&proof=qvJHbirH8RHs32JgycdaQJStS2Z1vA2mn8aXAp5Fk66,59baSxQgG7qpvB35KPyMpP8KkPa5F15W7t3R9E9FJcS2,GMiziLLZw4ws18bK5LG76SEKbgu2gCRVcT93BEUmcTjD,89Xaaw6fodRjnrBP9WMxM9wPQ8SeUWfpXrMSX2fkkaXf,GfuACX4jchPRn8QsYixCu8XbYiHdv8U2WPN9mHLotyM3,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CCx71GQbp8Cxps2E5YFRVbbe4Gze3xqgEa37bv5Kcdaa',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CCx71GQbp8Cxps2E5YFRVbbe4Gze3xqgEa37bv5Kcdaa&amount=2&index=80&proof=E6TgmFuMTKhQARQFrb5krn9MvZEzD3M3pvwYZrdJ6KUS,8SJVdh7YUodcfiQJ84wtaoeoQttrYicB8841AptiN7da,3NMrrERdSGGXNXFTF6dDsLghtYVfp28aJG5eqN5AM3JY,BNj4pb89E9HBW4bLSXjswNgEACiBXGfY3kuPSbCY8Ac1,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HGUCNgAw8chZLe8XrHs1iS85G87FZT8bo4xLuSZRU1Tm',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HGUCNgAw8chZLe8XrHs1iS85G87FZT8bo4xLuSZRU1Tm&amount=2&index=81&proof=FMAeTGQGUggfmkV9YiGrZRbQRCg3VBj576aax3zkL2FL,8SJVdh7YUodcfiQJ84wtaoeoQttrYicB8841AptiN7da,3NMrrERdSGGXNXFTF6dDsLghtYVfp28aJG5eqN5AM3JY,BNj4pb89E9HBW4bLSXjswNgEACiBXGfY3kuPSbCY8Ac1,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CAXQuiFvWWLkeo9qxjNDMjYvQBZoDFpD6aBoSbNZT79P',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CAXQuiFvWWLkeo9qxjNDMjYvQBZoDFpD6aBoSbNZT79P&amount=2&index=82&proof=8EVG2grVq15tvTf6aASn5WJUa2fFyJR2yh3mBAjbntW6,U3A2YYqTet9ECJroQ4nwBswwXRWmbjZqRmtYQngzJWT,3NMrrERdSGGXNXFTF6dDsLghtYVfp28aJG5eqN5AM3JY,BNj4pb89E9HBW4bLSXjswNgEACiBXGfY3kuPSbCY8Ac1,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'AR4bLQxgNtWqdnjccG7ST3AGQrZUyim7Lw58CEd6FjSA',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=AR4bLQxgNtWqdnjccG7ST3AGQrZUyim7Lw58CEd6FjSA&amount=2&index=83&proof=7UK8aq9vhq5qHBXBsM94vF1Tk6KiF4HS3ueQoufnpMF1,U3A2YYqTet9ECJroQ4nwBswwXRWmbjZqRmtYQngzJWT,3NMrrERdSGGXNXFTF6dDsLghtYVfp28aJG5eqN5AM3JY,BNj4pb89E9HBW4bLSXjswNgEACiBXGfY3kuPSbCY8Ac1,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'wpcVMWUNSy6VaWCrPFM2rxTKvcMgqWHdZt8mwUvohho',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=wpcVMWUNSy6VaWCrPFM2rxTKvcMgqWHdZt8mwUvohho&amount=2&index=84&proof=HWTurgLc3JkcfwhJCKmaLcJ7ruQ753wFQG1yDUAW83gC,E89xqybT9BCJLc7tgdjYmMJXuXwrVKSGaGzDdrtCvCSm,AYqNttXPVDFP115YxFRzqHTdUXsrKrCKsaQG1q8BPRNV,BNj4pb89E9HBW4bLSXjswNgEACiBXGfY3kuPSbCY8Ac1,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '41MbW3JpiRachNsWxHVvx2aB329WBTTEDEdny72h8AbE',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=41MbW3JpiRachNsWxHVvx2aB329WBTTEDEdny72h8AbE&amount=2&index=85&proof=5kUEf39jG4abe8zVbvr9jzpBRdf8DGKJQyg2sgTwASBi,E89xqybT9BCJLc7tgdjYmMJXuXwrVKSGaGzDdrtCvCSm,AYqNttXPVDFP115YxFRzqHTdUXsrKrCKsaQG1q8BPRNV,BNj4pb89E9HBW4bLSXjswNgEACiBXGfY3kuPSbCY8Ac1,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'DKq3C835opvfULcfdTCUYve67no7F9v9QzEcC6fxPwop',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=DKq3C835opvfULcfdTCUYve67no7F9v9QzEcC6fxPwop&amount=2&index=86&proof=9MT5vL9e5gHm9gPsTeLjLeqqgA85CWmmRsgnAqQ7uXiW,6TPo4kddG7ovLnUEGgbZ8kTqquHbkbZ46CL2ST5z2Sfg,AYqNttXPVDFP115YxFRzqHTdUXsrKrCKsaQG1q8BPRNV,BNj4pb89E9HBW4bLSXjswNgEACiBXGfY3kuPSbCY8Ac1,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2PWE862wAiRFte7GZAQXCManXiaTtCnZgdJrJxNEygTj',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2PWE862wAiRFte7GZAQXCManXiaTtCnZgdJrJxNEygTj&amount=2&index=87&proof=9T7oqvDubhwjbFPCXdV6MVyJe1DbtxUrYNahrcEtoN8Y,6TPo4kddG7ovLnUEGgbZ8kTqquHbkbZ46CL2ST5z2Sfg,AYqNttXPVDFP115YxFRzqHTdUXsrKrCKsaQG1q8BPRNV,BNj4pb89E9HBW4bLSXjswNgEACiBXGfY3kuPSbCY8Ac1,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9BMgPyn5QUNKmzrn3kHLYdd4BnVvs2mdkhEC29eHSRwH',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9BMgPyn5QUNKmzrn3kHLYdd4BnVvs2mdkhEC29eHSRwH&amount=2&index=88&proof=2Gg3WMfJKhZJb1Btwwfsp84oWZvXgxwhBBfaRgYMsELj,HEfMQAsFbX3rJQFFDM3cCzAUNcRYjNQCTfTinmyWg2dt,6wSDdwEBLCLr2AXu3zaFtKy9ZvgBdMMvDoycyMX6M7Lg,C5sDiZqnpz2sTqsfkSh2qhmuyBvT54YB5V9r8RGJSNQV,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6QAYTQxfkmr8JHEc75oSPwNTGFwERK81mLA4YGNjVgbK',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6QAYTQxfkmr8JHEc75oSPwNTGFwERK81mLA4YGNjVgbK&amount=2&index=89&proof=8VdGuCfa4jRzbvkAYRAGrS9GRBtxsY1n7sd1qRtvXzUu,HEfMQAsFbX3rJQFFDM3cCzAUNcRYjNQCTfTinmyWg2dt,6wSDdwEBLCLr2AXu3zaFtKy9ZvgBdMMvDoycyMX6M7Lg,C5sDiZqnpz2sTqsfkSh2qhmuyBvT54YB5V9r8RGJSNQV,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '8nqwAyKf6p78fxduDkqsNWVjcHyGoYPToVoGxeA6da8X',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=8nqwAyKf6p78fxduDkqsNWVjcHyGoYPToVoGxeA6da8X&amount=2&index=90&proof=12ZfYhoznzXcSb4eFXyrobfyS7idjmvJRpniZsSLW3wa,EY39aSBH4r53Md9GyCrAG8N6DsXkrfP6kiEiRCcmvcPT,6wSDdwEBLCLr2AXu3zaFtKy9ZvgBdMMvDoycyMX6M7Lg,C5sDiZqnpz2sTqsfkSh2qhmuyBvT54YB5V9r8RGJSNQV,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HjBFBSwLbDtheHzQLjvYyaTwPWSFsannSToptWsNdRQW',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HjBFBSwLbDtheHzQLjvYyaTwPWSFsannSToptWsNdRQW&amount=2&index=91&proof=93uqRnQuVVBVw8DZ3MQEGUuEnQFHQrbeAkFkXnQA3TXh,EY39aSBH4r53Md9GyCrAG8N6DsXkrfP6kiEiRCcmvcPT,6wSDdwEBLCLr2AXu3zaFtKy9ZvgBdMMvDoycyMX6M7Lg,C5sDiZqnpz2sTqsfkSh2qhmuyBvT54YB5V9r8RGJSNQV,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'GrPR3GApLcARPxNHQ3W64LhMKFkbtqHvFKc5adyZBNff',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=GrPR3GApLcARPxNHQ3W64LhMKFkbtqHvFKc5adyZBNff&amount=2&index=92&proof=EBmAs1nUUrbhZr8NN2SKMKS1RA6hkmNG2ChP5rJ7q1os,41CyUz8k5GbWZAamdTdmZ7f9RJ7YXEAjVqi85JgkGtr2,5C2DdMRUJqeZVvTcaKhrjV9i256BuCPMBc96EbrmqYmZ,C5sDiZqnpz2sTqsfkSh2qhmuyBvT54YB5V9r8RGJSNQV,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'FpA41pfu5WSPxfKcmKfbKtxNbbaiWHRJsL9qx4T7cWyy',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=FpA41pfu5WSPxfKcmKfbKtxNbbaiWHRJsL9qx4T7cWyy&amount=2&index=93&proof=CW8DrSZ1EyVYrfrnzMvXScBZuu9Np1LTtSnxH8mAkTJy,41CyUz8k5GbWZAamdTdmZ7f9RJ7YXEAjVqi85JgkGtr2,5C2DdMRUJqeZVvTcaKhrjV9i256BuCPMBc96EbrmqYmZ,C5sDiZqnpz2sTqsfkSh2qhmuyBvT54YB5V9r8RGJSNQV,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'ra2HfuPgyJ7gUx6bk8zXVU4VqvYu1kHYXdzkHdFtSso',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=ra2HfuPgyJ7gUx6bk8zXVU4VqvYu1kHYXdzkHdFtSso&amount=2&index=94&proof=9893VZu4TCau783RkQwBg8tc9GS2JZHPQ1mGXojeFDa2,FjMFQy9CLUmHDX2BAwY7NEGHiTsb3f4Mh1YUYDhRzJrF,5C2DdMRUJqeZVvTcaKhrjV9i256BuCPMBc96EbrmqYmZ,C5sDiZqnpz2sTqsfkSh2qhmuyBvT54YB5V9r8RGJSNQV,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Bu8csqJkPWFfwNjXupRDNEHB8P1fYgdxCZqKHyk3Q4nR',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Bu8csqJkPWFfwNjXupRDNEHB8P1fYgdxCZqKHyk3Q4nR&amount=2&index=95&proof=Cn8e1CvMuiRQL5M9jqvm2safEch5U1SW5cVKmhuWdkrb,FjMFQy9CLUmHDX2BAwY7NEGHiTsb3f4Mh1YUYDhRzJrF,5C2DdMRUJqeZVvTcaKhrjV9i256BuCPMBc96EbrmqYmZ,C5sDiZqnpz2sTqsfkSh2qhmuyBvT54YB5V9r8RGJSNQV,3SXjPbtGvayU4fLz1ZuZep5bTxvQwKc6kKyGZQ7e8Epn,GPndDpbN62vYXTMwUG8JQrJv7KcyYeeN1vXRd9L1aZJ5,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'BcjWhSPNScn6UpGhppTKPMHwW2AtxUQ6XtDbTDyPaWGp',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=BcjWhSPNScn6UpGhppTKPMHwW2AtxUQ6XtDbTDyPaWGp&amount=2&index=96&proof=CujA8LpYzZBsNc9VgG6ekzVUvsJgZopXqjGgWLx7wwGV,FaqFbDoGcvQ8DXzRXeU7ELcjxUYXEwYjNvhPNioZHySf,FQdeQiMUqV5hCKxDN8gUmuDfwikQkVYAcijvsiFc87U8,6mZGkQYZygxSSugLhPMCVZ13jd3AvNu3QLVTbdzp1fBa,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'aRjwWBdnVm98HBFKpmnZqnkju89vPXh44YpQHAoE8X7',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=aRjwWBdnVm98HBFKpmnZqnkju89vPXh44YpQHAoE8X7&amount=2&index=97&proof=71kjVCKLMrJVS3GYN5iDMt9RCfkL99kFJsgNPpnUUJzR,FaqFbDoGcvQ8DXzRXeU7ELcjxUYXEwYjNvhPNioZHySf,FQdeQiMUqV5hCKxDN8gUmuDfwikQkVYAcijvsiFc87U8,6mZGkQYZygxSSugLhPMCVZ13jd3AvNu3QLVTbdzp1fBa,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6RhLQikkjzace4ti4D458iSmKofbPdMGNB7VKHmWwYPP',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6RhLQikkjzace4ti4D458iSmKofbPdMGNB7VKHmWwYPP&amount=2&index=98&proof=4f7dx1XRPwspybKWBNYgtVpyYbrwvMLQRa1EDgHZ8dtC,9Go7r5LKHz43Qv6Ro4okUNuciRK4UQ1rEgCNmoCeDGnH,FQdeQiMUqV5hCKxDN8gUmuDfwikQkVYAcijvsiFc87U8,6mZGkQYZygxSSugLhPMCVZ13jd3AvNu3QLVTbdzp1fBa,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Aw3PecswgzH5uBkRu5ZdvQogkgEpccNtwKGDg8TSbYSn',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Aw3PecswgzH5uBkRu5ZdvQogkgEpccNtwKGDg8TSbYSn&amount=2&index=99&proof=DwfnNUNckzvw1MEHGSLKJ71msWQPNEgvxeTvAoPbPrWi,9Go7r5LKHz43Qv6Ro4okUNuciRK4UQ1rEgCNmoCeDGnH,FQdeQiMUqV5hCKxDN8gUmuDfwikQkVYAcijvsiFc87U8,6mZGkQYZygxSSugLhPMCVZ13jd3AvNu3QLVTbdzp1fBa,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2ksyEXoYD6EkPQVoBTVD8mUPFP8V5D3MQ2mgVrRHQgvm',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2ksyEXoYD6EkPQVoBTVD8mUPFP8V5D3MQ2mgVrRHQgvm&amount=2&index=100&proof=7rztcWoYS36infk3Z7vXa8RXNDffsMhoWDFDJXAJL5N2,BstbNDYUvC4Dpn9WrAdoDSq8WN9bZsHQAWZ5fKsLDRka,5C9esDe2Qw3boxMN6RLHRq9nYthrZxsQpqUkZt2jicKN,6mZGkQYZygxSSugLhPMCVZ13jd3AvNu3QLVTbdzp1fBa,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7yTMX8J7axgUHFLDUZw7iJZhdFMgzGnywStGgKUmcjMG',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7yTMX8J7axgUHFLDUZw7iJZhdFMgzGnywStGgKUmcjMG&amount=2&index=101&proof=4c1Du2LuNX5uM6eDwUwucP7yJdb1Cg2bLuj6vzgeYMWH,BstbNDYUvC4Dpn9WrAdoDSq8WN9bZsHQAWZ5fKsLDRka,5C9esDe2Qw3boxMN6RLHRq9nYthrZxsQpqUkZt2jicKN,6mZGkQYZygxSSugLhPMCVZ13jd3AvNu3QLVTbdzp1fBa,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7xt4T87RJWyDRizRMyXZzRrvyTF25VBAhij4XQsKjYr',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7xt4T87RJWyDRizRMyXZzRrvyTF25VBAhij4XQsKjYr&amount=2&index=102&proof=H1bCZPkkef5LenkAfYScSnbbPHFsXVtrkooUSZLuumVs,E4bazGUUQDL8aunkVUVmaGc5dEpJkKV7XD3TMrkLcMWN,5C9esDe2Qw3boxMN6RLHRq9nYthrZxsQpqUkZt2jicKN,6mZGkQYZygxSSugLhPMCVZ13jd3AvNu3QLVTbdzp1fBa,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'J3kn1ASXaA1fF7hRWqvejr7h3CZBAXb9GV5HASm5g78f',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=J3kn1ASXaA1fF7hRWqvejr7h3CZBAXb9GV5HASm5g78f&amount=2&index=103&proof=4S2g4xesq1NHvvxWteTrMvvFPocsJxZPntW1N8MLmFQV,E4bazGUUQDL8aunkVUVmaGc5dEpJkKV7XD3TMrkLcMWN,5C9esDe2Qw3boxMN6RLHRq9nYthrZxsQpqUkZt2jicKN,6mZGkQYZygxSSugLhPMCVZ13jd3AvNu3QLVTbdzp1fBa,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HdshWvWmq89PmS7C4GhSaXvHeNDRwoYXWEK5R8CM1t2F',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HdshWvWmq89PmS7C4GhSaXvHeNDRwoYXWEK5R8CM1t2F&amount=2&index=104&proof=4QBhKowutJpxHyJNewoNcDMXp8rSaAm17PzC6Q4trM4M,HXTG4xH9MMpKjHKBEENvCXMMbUKcbnjHFYfqvRQKuts1,B6PU8PFmo8TfAUF6RA8yq8qXsH8gYpUszDxuK4SW8Q11,3SBs6QRTecjwmKFiTkZucZXugeqbg1X96UR6xL1LTx4G,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9QAS29FYFnHFzmDGByR6wndhEHa7WmGUsFm9vAfcDJmi',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9QAS29FYFnHFzmDGByR6wndhEHa7WmGUsFm9vAfcDJmi&amount=2&index=105&proof=H7xjP48uwSvGFe5aG39EeymbNzcHuWDJVUQq3yT6zWEL,HXTG4xH9MMpKjHKBEENvCXMMbUKcbnjHFYfqvRQKuts1,B6PU8PFmo8TfAUF6RA8yq8qXsH8gYpUszDxuK4SW8Q11,3SBs6QRTecjwmKFiTkZucZXugeqbg1X96UR6xL1LTx4G,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7X41BDkpvt4UdAnKjCLdmndatF7gUj5LURU6H943HBov',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7X41BDkpvt4UdAnKjCLdmndatF7gUj5LURU6H943HBov&amount=2&index=106&proof=9wuwLiJpgfZeumbtyTVaC9xCJvGq8EFPWFb7VmdGBKqA,EPezysQTeBS4xTwxX3RXCxYc1bi7Uv77bZLxNbwhD6EC,B6PU8PFmo8TfAUF6RA8yq8qXsH8gYpUszDxuK4SW8Q11,3SBs6QRTecjwmKFiTkZucZXugeqbg1X96UR6xL1LTx4G,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EJY2Gc9wDY8sMg6mUPGKBFG8JtGGZsagAirzVWjWWPhf',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EJY2Gc9wDY8sMg6mUPGKBFG8JtGGZsagAirzVWjWWPhf&amount=2&index=107&proof=SrEZiA5fVvn1eGJWiRktn5VUKSaUeabfbfbMJK9Zito,EPezysQTeBS4xTwxX3RXCxYc1bi7Uv77bZLxNbwhD6EC,B6PU8PFmo8TfAUF6RA8yq8qXsH8gYpUszDxuK4SW8Q11,3SBs6QRTecjwmKFiTkZucZXugeqbg1X96UR6xL1LTx4G,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7mGDkJm4XfDnsFw2A965EehNETMNXXxe6StoEPnUhcxU',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7mGDkJm4XfDnsFw2A965EehNETMNXXxe6StoEPnUhcxU&amount=2&index=108&proof=AJTrrcrSr74wBcutJrPnCfD7F3q1v3rfB53HLJD9mxQm,CLyCUgTsytNdhYhA3bMWmRTj7YsnpLFqYo5ooLGyA17g,DVNHc1jdRjqFeSmmmBiSWdtUSu53C5hNB8NkDZBQvncs,3SBs6QRTecjwmKFiTkZucZXugeqbg1X96UR6xL1LTx4G,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'GCXU7a1DXHFQZkUB7A6wcmuyGepiftaa85ignVHQGwog',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=GCXU7a1DXHFQZkUB7A6wcmuyGepiftaa85ignVHQGwog&amount=2&index=109&proof=EPUSxGtt6ThKe1rC9HFTrNGHhcQsB6oyoXu77c2P8fna,CLyCUgTsytNdhYhA3bMWmRTj7YsnpLFqYo5ooLGyA17g,DVNHc1jdRjqFeSmmmBiSWdtUSu53C5hNB8NkDZBQvncs,3SBs6QRTecjwmKFiTkZucZXugeqbg1X96UR6xL1LTx4G,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9hqygf6tfTPMmX8UtxcwP2D8owWyPv8DhtPNygaeqLsM',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9hqygf6tfTPMmX8UtxcwP2D8owWyPv8DhtPNygaeqLsM&amount=2&index=110&proof=GJ7iAAy5jiPE57JVKkor5SiefwAwKoaRkxmKDe1BiNnn,6XgcCNvghqCNh1US2geZQhPxwBPtevxxgxCz9KeM4v7U,DVNHc1jdRjqFeSmmmBiSWdtUSu53C5hNB8NkDZBQvncs,3SBs6QRTecjwmKFiTkZucZXugeqbg1X96UR6xL1LTx4G,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'ABo92HqTbXiEVGm2PdeEppiskKXHAEW6o1MNe94LwQ74',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=ABo92HqTbXiEVGm2PdeEppiskKXHAEW6o1MNe94LwQ74&amount=2&index=111&proof=467qNXfiK4LxPApNH3ygME5koCKLW5E6RG7xbdEXjPAM,6XgcCNvghqCNh1US2geZQhPxwBPtevxxgxCz9KeM4v7U,DVNHc1jdRjqFeSmmmBiSWdtUSu53C5hNB8NkDZBQvncs,3SBs6QRTecjwmKFiTkZucZXugeqbg1X96UR6xL1LTx4G,HTm7GR9bYKu6NiQmzhyg24CdCNiebpvd92x2Xq4TNiPm,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9zBRmLathGR4kd1wPD83cNTmNs36vidUsvUTFjroXPjf',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9zBRmLathGR4kd1wPD83cNTmNs36vidUsvUTFjroXPjf&amount=2&index=112&proof=7HJnHJZpfhY4fhjJfbug2RuaB3jchH13C8eAXDoTaDFN,27yr6eqrRDwkRdyTTUsjsCaP3YCzgudh5SFV6o1SXSyA,AgmGqtwE3iCTdJoDw2fN7mpDAAXu1w9p4kEihpW5yhbR,AcoLy12wqSXqQaJBzoqrw6irgmzMcX4iBQD4v4Ubeq9F,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'C7hzKZe59Xr3FgBnaKeF2f6ggYbwC4yW8ZCKDoj8oQbB',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=C7hzKZe59Xr3FgBnaKeF2f6ggYbwC4yW8ZCKDoj8oQbB&amount=2&index=113&proof=3MjFwWrFDKGJX53e5jf1KcSnmPKTJKkcHEJZPQHCtYmn,27yr6eqrRDwkRdyTTUsjsCaP3YCzgudh5SFV6o1SXSyA,AgmGqtwE3iCTdJoDw2fN7mpDAAXu1w9p4kEihpW5yhbR,AcoLy12wqSXqQaJBzoqrw6irgmzMcX4iBQD4v4Ubeq9F,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2L9GxrbgL3NJoKG3iove4Snd7oA7uEcXz23Ct5qBNYui',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2L9GxrbgL3NJoKG3iove4Snd7oA7uEcXz23Ct5qBNYui&amount=2&index=114&proof=2mvZXMbKNYfTyE38dx9aaWiPqUNjdbarnhwyY4cknq8W,BH2xJvfh9KMvmygRTXNYb3K95xbJmqXV4yys4g3V2xBZ,AgmGqtwE3iCTdJoDw2fN7mpDAAXu1w9p4kEihpW5yhbR,AcoLy12wqSXqQaJBzoqrw6irgmzMcX4iBQD4v4Ubeq9F,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'GrMBB3DVtoKTdSw7zUBCe6bQsEjuFmjcPc2yQc98SsJC',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=GrMBB3DVtoKTdSw7zUBCe6bQsEjuFmjcPc2yQc98SsJC&amount=2&index=115&proof=JAka6nmwCobXQSuoVJAfBg7oHPsV4PTUgcZSyDJFYP4b,BH2xJvfh9KMvmygRTXNYb3K95xbJmqXV4yys4g3V2xBZ,AgmGqtwE3iCTdJoDw2fN7mpDAAXu1w9p4kEihpW5yhbR,AcoLy12wqSXqQaJBzoqrw6irgmzMcX4iBQD4v4Ubeq9F,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4QsiJMJQUqJ9t3DUzgKuPYUnA7ZwhfTU29pXtGWBsUaD',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4QsiJMJQUqJ9t3DUzgKuPYUnA7ZwhfTU29pXtGWBsUaD&amount=2&index=116&proof=3oB67ktayjVGEAcziBcgfthAukes8EA14D8HsnZWkPMD,8yg4VSYjwqu1SLAVf8zNYZX4jfU7pBKJTWd9P8ZQ6zAr,39gkamorc7U1DhXzFPKkciFFvR3T8qMVgWWCBjQ7CR5a,AcoLy12wqSXqQaJBzoqrw6irgmzMcX4iBQD4v4Ubeq9F,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'DsDpqFDJDv1ProWnq5TLh3T62WTmZfJDfG1BkzRTtuWG',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=DsDpqFDJDv1ProWnq5TLh3T62WTmZfJDfG1BkzRTtuWG&amount=2&index=117&proof=2uxFk1Hqzarazr6piAKLHf9q2HsGDgBwXfjjBZbVZsUL,8yg4VSYjwqu1SLAVf8zNYZX4jfU7pBKJTWd9P8ZQ6zAr,39gkamorc7U1DhXzFPKkciFFvR3T8qMVgWWCBjQ7CR5a,AcoLy12wqSXqQaJBzoqrw6irgmzMcX4iBQD4v4Ubeq9F,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5sZNHgGEZnjegthsF4QMnFs7oPX5yJQJcuNyXQnh2qcv',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5sZNHgGEZnjegthsF4QMnFs7oPX5yJQJcuNyXQnh2qcv&amount=2&index=118&proof=H5PasDjtDDJWQa8Wrx6PxHWZNhnVSoE8YwpdVMJpsynK,5iE9oekd11CdQ8Gg38EdxBysihec6b8tgB4Acirnubb4,39gkamorc7U1DhXzFPKkciFFvR3T8qMVgWWCBjQ7CR5a,AcoLy12wqSXqQaJBzoqrw6irgmzMcX4iBQD4v4Ubeq9F,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2yYjru85YHCkuDFEzMC1NJnYkRLABjf8sEKRu4kxgzks',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2yYjru85YHCkuDFEzMC1NJnYkRLABjf8sEKRu4kxgzks&amount=2&index=119&proof=9Pxev5LbeYFPHkEnUqYA6c1xWaHXztv1XoukkHuYtz7z,5iE9oekd11CdQ8Gg38EdxBysihec6b8tgB4Acirnubb4,39gkamorc7U1DhXzFPKkciFFvR3T8qMVgWWCBjQ7CR5a,AcoLy12wqSXqQaJBzoqrw6irgmzMcX4iBQD4v4Ubeq9F,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'B16gMSQjLNctzu7gnbQimAZp4prro5wksARY2t1P3hWn',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=B16gMSQjLNctzu7gnbQimAZp4prro5wksARY2t1P3hWn&amount=2&index=120&proof=C8G3vCfRz7szsEZLqk3J72ttZ6defDmP3oiga6YYUJ22,HQabvRAVwCt2GKDxaSe9JUbfn6kQLQbxTgFz7sT6sNsb,J6ZSoN9CXTWpLDERRC4JLU7X76HPUhWm2wnUC5a3Xdy3,8JU6ZVF82WdBrCuwXxWHWHgLNhhEC3cpFhBXFh1jfPvG,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Gb73e17BnfHiD4XZGgDriB6W5N9yRBv5M1RB6dWArn5W',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Gb73e17BnfHiD4XZGgDriB6W5N9yRBv5M1RB6dWArn5W&amount=2&index=121&proof=6rQdSCd8mq7AeLR4t6dNCvpkD2HdvgH12Tscqb2pHNnX,HQabvRAVwCt2GKDxaSe9JUbfn6kQLQbxTgFz7sT6sNsb,J6ZSoN9CXTWpLDERRC4JLU7X76HPUhWm2wnUC5a3Xdy3,8JU6ZVF82WdBrCuwXxWHWHgLNhhEC3cpFhBXFh1jfPvG,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Ht9fpKRNSFanTHh1J2V5ZLo8QDDByHBgJY4ipJUpqnyL',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Ht9fpKRNSFanTHh1J2V5ZLo8QDDByHBgJY4ipJUpqnyL&amount=2&index=122&proof=6wDNeoYSee6C9PzVTU3ouzZJXbx2kF2gynwEfzwM9CWS,D9aAfBXPQSFvHeix2preDRhED9YRjgYmrVNj8FzfPASB,J6ZSoN9CXTWpLDERRC4JLU7X76HPUhWm2wnUC5a3Xdy3,8JU6ZVF82WdBrCuwXxWHWHgLNhhEC3cpFhBXFh1jfPvG,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '3nLZ7kRCmtHy9Az2TU3swEQa8nH2NAzyhX39QsTMPJEz',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=3nLZ7kRCmtHy9Az2TU3swEQa8nH2NAzyhX39QsTMPJEz&amount=2&index=123&proof=F64e2YiwcQGBdnGdG3o9q24Ud19SGCyWfgrWMzT9dxTA,D9aAfBXPQSFvHeix2preDRhED9YRjgYmrVNj8FzfPASB,J6ZSoN9CXTWpLDERRC4JLU7X76HPUhWm2wnUC5a3Xdy3,8JU6ZVF82WdBrCuwXxWHWHgLNhhEC3cpFhBXFh1jfPvG,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'G3X2NTvkqP9qWFX3QihLWzxiHpBGxQHWBiF8i1oExQR',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=G3X2NTvkqP9qWFX3QihLWzxiHpBGxQHWBiF8i1oExQR&amount=2&index=124&proof=CQJUizrZGcwYTfWUve8QvLRAspbtYSZ3ZBj8pPMShKa8,A4wQADjeLJFDQgpWVdycQPDBvzA4C3Simx2C7BWRcAtA,BqarKsX7RnUgFeMZ8ZHPUUeQ2JckBDrNiTWS4JPHRsSD,8JU6ZVF82WdBrCuwXxWHWHgLNhhEC3cpFhBXFh1jfPvG,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'FQguZg5ySK8WRqgd6jv7JU8ywns4Rrq9RVmZhYHxvRPu',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=FQguZg5ySK8WRqgd6jv7JU8ywns4Rrq9RVmZhYHxvRPu&amount=2&index=125&proof=CarcKoS9dNHa3YDtwuQoTvkzfCVhRsd3x8yioYspd2KK,A4wQADjeLJFDQgpWVdycQPDBvzA4C3Simx2C7BWRcAtA,BqarKsX7RnUgFeMZ8ZHPUUeQ2JckBDrNiTWS4JPHRsSD,8JU6ZVF82WdBrCuwXxWHWHgLNhhEC3cpFhBXFh1jfPvG,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4CbZGuBKyDbEUxMsgJPP3ZVbCfHat1qEAFqoWWGeNEre',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4CbZGuBKyDbEUxMsgJPP3ZVbCfHat1qEAFqoWWGeNEre&amount=2&index=126&proof=B8bjaVhSwzrRRB6EZ9Q7Ap1RPH3NHohCDgPpjqckZhc1,2MY1jVRLfip7EEqyrDaNL8HC7Qx88W45hJusKYtDuqop,BqarKsX7RnUgFeMZ8ZHPUUeQ2JckBDrNiTWS4JPHRsSD,8JU6ZVF82WdBrCuwXxWHWHgLNhhEC3cpFhBXFh1jfPvG,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'AH1XpEtSucKfPPUPrnSBGEJ6jDyRiRCrpZQ99jKmJbor',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=AH1XpEtSucKfPPUPrnSBGEJ6jDyRiRCrpZQ99jKmJbor&amount=2&index=127&proof=6UueYq1Xe6YrUGhotwmWCz9CyBoUi1qqUFb2WKZHaxV5,2MY1jVRLfip7EEqyrDaNL8HC7Qx88W45hJusKYtDuqop,BqarKsX7RnUgFeMZ8ZHPUUeQ2JckBDrNiTWS4JPHRsSD,8JU6ZVF82WdBrCuwXxWHWHgLNhhEC3cpFhBXFh1jfPvG,F27bw2PRnQxAphL4mGhFVHqwrJZhWPc99EktrcEezvM9,8WfGQntrcVyfxeHHiw9SP4xjYZ2nwz4SrF1uHhhZ9wo3,6A2jw4bydq1o4uV6oe8B5z4d8F6iY1K6cPSUq273ncVB,5P9UgeoR9d2aybYoDroPRB97YbkUNQ4PavKxFWoFWHCh&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5oDzXSnXeajGxMyL9rqHvjvpUWcfHAYp6jwWqdTXHArQ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5oDzXSnXeajGxMyL9rqHvjvpUWcfHAYp6jwWqdTXHArQ&amount=2&index=128&proof=FsDfBStFdK5ds4Fp3VLRCoY942X6RR4eZZsPapQJVwQq,3A3Ledt45gkgw6fSPwFjqbjfkNBDuQdp39MTPnVgdXDD,5kHfEk5TegWzQFzeRmvKNxyFE383ivZc7s9cNAHTdHry,9CWyfkq8Ct2nBS8n48DQ3Vx6ZEySLZ42MsoHKUvUCmb3,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'hScG8gQMXVmGwKr6j5s5eMsJCqWtVLcoFDxHk8AEktR',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=hScG8gQMXVmGwKr6j5s5eMsJCqWtVLcoFDxHk8AEktR&amount=2&index=129&proof=HwaNRs1bYmXGves23fPRpjxkWC7BkN3dayA92BDXXdwv,3A3Ledt45gkgw6fSPwFjqbjfkNBDuQdp39MTPnVgdXDD,5kHfEk5TegWzQFzeRmvKNxyFE383ivZc7s9cNAHTdHry,9CWyfkq8Ct2nBS8n48DQ3Vx6ZEySLZ42MsoHKUvUCmb3,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2oGQdWkn9AhGinZAZcqZLyEtUNknJ2NxQQYWrJV92DeB',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2oGQdWkn9AhGinZAZcqZLyEtUNknJ2NxQQYWrJV92DeB&amount=2&index=130&proof=7TUykNygWytPbC5W8xLgcLmJQ3DgwWPnBtzLcqbCZyHB,GJBGWwun8PyMNu6soDPSmvqQkju7aKqnkW2YL9QJyX3T,5kHfEk5TegWzQFzeRmvKNxyFE383ivZc7s9cNAHTdHry,9CWyfkq8Ct2nBS8n48DQ3Vx6ZEySLZ42MsoHKUvUCmb3,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HTFcPBPnZyJyHRZZxmcFGc8xit55HYBaDofikuwGaARa',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HTFcPBPnZyJyHRZZxmcFGc8xit55HYBaDofikuwGaARa&amount=2&index=131&proof=HfepjJvott6jNp2M8mSGhZ9JpftQsKekEuPQR7DASJzZ,GJBGWwun8PyMNu6soDPSmvqQkju7aKqnkW2YL9QJyX3T,5kHfEk5TegWzQFzeRmvKNxyFE383ivZc7s9cNAHTdHry,9CWyfkq8Ct2nBS8n48DQ3Vx6ZEySLZ42MsoHKUvUCmb3,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Cy34fn5Px8JmSa5oN4QSWHdhm8sG8jdEcCG5TWDh17wL',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Cy34fn5Px8JmSa5oN4QSWHdhm8sG8jdEcCG5TWDh17wL&amount=2&index=132&proof=4yDtuPBm6cDFqCio3SNRd2VPL9KuDRbka1SxVMYZidjj,DVfDtNt2qL6UpBKd31YZV3uRbbrtSC2h2qx2jSpCRBpg,9C4N2vFKq2wRVLchkEoQp6R3kikMxp14z4Yjk2uwqNAy,9CWyfkq8Ct2nBS8n48DQ3Vx6ZEySLZ42MsoHKUvUCmb3,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2LXfiaBmc9MrpjFqpFzYZ38Mc7cgzxGCnfSpSx9ftR43',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2LXfiaBmc9MrpjFqpFzYZ38Mc7cgzxGCnfSpSx9ftR43&amount=2&index=133&proof=2nJEwo65boqjRAZTUu1a5JXZwHfhBV3rTDCuPxCG5q37,DVfDtNt2qL6UpBKd31YZV3uRbbrtSC2h2qx2jSpCRBpg,9C4N2vFKq2wRVLchkEoQp6R3kikMxp14z4Yjk2uwqNAy,9CWyfkq8Ct2nBS8n48DQ3Vx6ZEySLZ42MsoHKUvUCmb3,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7sn6uDCo7ELL3S4gSMFMF8zRhzJyciNHYB2bRzE9UZ61',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7sn6uDCo7ELL3S4gSMFMF8zRhzJyciNHYB2bRzE9UZ61&amount=2&index=134&proof=CbakRPVVexVd6e6pbXVn8Df4XnJQWvgTqugRpPJPSCKj,Fvce5FasrsR8ygVhx1fEYxcM9RDVXG4MQwhbVyXuyeBZ,9C4N2vFKq2wRVLchkEoQp6R3kikMxp14z4Yjk2uwqNAy,9CWyfkq8Ct2nBS8n48DQ3Vx6ZEySLZ42MsoHKUvUCmb3,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '3Tr1ys5sxL49JbzbvjWuJULNNMYj7D9NPSdSPYThXXd7',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=3Tr1ys5sxL49JbzbvjWuJULNNMYj7D9NPSdSPYThXXd7&amount=2&index=135&proof=ALjDbYeENNYvQ1ptZkk4q2fYcFwEAEzFWiaAwm68XvAb,Fvce5FasrsR8ygVhx1fEYxcM9RDVXG4MQwhbVyXuyeBZ,9C4N2vFKq2wRVLchkEoQp6R3kikMxp14z4Yjk2uwqNAy,9CWyfkq8Ct2nBS8n48DQ3Vx6ZEySLZ42MsoHKUvUCmb3,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2LX8gYwHsbVKzFSBs6F6epVrodGtPs8CA3vMc3qTz6xM',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2LX8gYwHsbVKzFSBs6F6epVrodGtPs8CA3vMc3qTz6xM&amount=2&index=136&proof=21SWd7A1LRKbn63GUxPfD8CUpQV7grcrX1MVDPQxyLCP,9VJExswAMhjE1niGfBotTCSci4LAGsgGc4sFKXrdAaX2,CdSBXuYEUrXMQHXE8YBUMHtM4vz21RuxqAHbAr83JDFt,vFdnqNJ1MJNcgMsosevTUjdxQx3qbqZpGwN7YKeM8jV,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'J7ErQnUxkgzyLx3hMjmFUmbm2HwmzQzRQtFF5XAAfynj',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=J7ErQnUxkgzyLx3hMjmFUmbm2HwmzQzRQtFF5XAAfynj&amount=2&index=137&proof=7nijmMGAABC52GPsoHQcceHxnJpoE5VGrfkZAFrNXNWn,9VJExswAMhjE1niGfBotTCSci4LAGsgGc4sFKXrdAaX2,CdSBXuYEUrXMQHXE8YBUMHtM4vz21RuxqAHbAr83JDFt,vFdnqNJ1MJNcgMsosevTUjdxQx3qbqZpGwN7YKeM8jV,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HYSD8cgy6peHx5oedJC4DY1Ry31CW9zZhjYchFQTdk6J',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HYSD8cgy6peHx5oedJC4DY1Ry31CW9zZhjYchFQTdk6J&amount=2&index=138&proof=53fw9LJC1b8uacdrJh7LqN5rxWLwV8ebUdg7RKyC53EE,GbXBZBWKHgyLw9Lh7s32eHVsroyMyXRWWYmkxiEYjKEh,CdSBXuYEUrXMQHXE8YBUMHtM4vz21RuxqAHbAr83JDFt,vFdnqNJ1MJNcgMsosevTUjdxQx3qbqZpGwN7YKeM8jV,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'G4X9h8b2hiaKxjHLkPcKdLHrEW15WDemsZJ2gYeAUJJ8',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=G4X9h8b2hiaKxjHLkPcKdLHrEW15WDemsZJ2gYeAUJJ8&amount=2&index=139&proof=C1okvvJqrtA671z4SFw3MdHGX4BD7JH53tVPoVJ448rE,GbXBZBWKHgyLw9Lh7s32eHVsroyMyXRWWYmkxiEYjKEh,CdSBXuYEUrXMQHXE8YBUMHtM4vz21RuxqAHbAr83JDFt,vFdnqNJ1MJNcgMsosevTUjdxQx3qbqZpGwN7YKeM8jV,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5uAMYTA4QKLDiWB1kTZ5jcTD12JBJmjgcjbWJYDxu8dG',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5uAMYTA4QKLDiWB1kTZ5jcTD12JBJmjgcjbWJYDxu8dG&amount=2&index=140&proof=DFQuoSDrJ65kj12ZKyp5Dxno7Pp5C3q1FNs4iTUhdjBo,4veMhGJaHqChhGjfo33RqfpMnE6AMNjdkpbkAuixeZSh,2Byz3oxdtPCdH3VUzdTAvKNppChQeNzpuGJMe1rkgr2M,vFdnqNJ1MJNcgMsosevTUjdxQx3qbqZpGwN7YKeM8jV,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'AZWx1rhVvupsCPSHtuV1p9y99W1mCULjsBrFu4R4wFiQ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=AZWx1rhVvupsCPSHtuV1p9y99W1mCULjsBrFu4R4wFiQ&amount=2&index=141&proof=6zFMFcVCWW9uRfb44vV3gWrwNCm37KxJtjy4PnET1CuK,4veMhGJaHqChhGjfo33RqfpMnE6AMNjdkpbkAuixeZSh,2Byz3oxdtPCdH3VUzdTAvKNppChQeNzpuGJMe1rkgr2M,vFdnqNJ1MJNcgMsosevTUjdxQx3qbqZpGwN7YKeM8jV,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7CdtS6Q77JqLZHYqx3LSHAmbVSooPBUTUJF5MdLnuQwa',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7CdtS6Q77JqLZHYqx3LSHAmbVSooPBUTUJF5MdLnuQwa&amount=2&index=142&proof=8So2ni7KPqpMv1StsUeA9aCKvTWSYdkuCdnvNMSku4Lc,8DjzG874Zp115iW8bnxhUHyLQVPTBBAgHx3T7WZx9asE,2Byz3oxdtPCdH3VUzdTAvKNppChQeNzpuGJMe1rkgr2M,vFdnqNJ1MJNcgMsosevTUjdxQx3qbqZpGwN7YKeM8jV,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'AzZrrz8vmN9dgErNeyYgRYAPMaMzUcaLdkizsXVtBMoX',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=AzZrrz8vmN9dgErNeyYgRYAPMaMzUcaLdkizsXVtBMoX&amount=2&index=143&proof=D2TMYkUDCGmTAeoA55YqKrRpk8dtVo6wyi9YCVdx1Fdg,8DjzG874Zp115iW8bnxhUHyLQVPTBBAgHx3T7WZx9asE,2Byz3oxdtPCdH3VUzdTAvKNppChQeNzpuGJMe1rkgr2M,vFdnqNJ1MJNcgMsosevTUjdxQx3qbqZpGwN7YKeM8jV,2cdZTj7jhkWa89YT34a7HkWcJbciX4PdKNpcfQBRguZy,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5o2DcavQnu9bXhmXrgmVUpekM6iNjyPahuF4tQr7obmU',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5o2DcavQnu9bXhmXrgmVUpekM6iNjyPahuF4tQr7obmU&amount=2&index=144&proof=A86yzm2mhAECcTRVxEBBPYE6HxZTMbV93vbjWtJWVm2G,FE4Tmvr4BLDUisfJUNvKSXxV1fSpJACAjqm2VwdbeQPk,GsrmHZJeUNVggcMx7xavB2QeZJjxuTYgv2B2g5RMiTDa,9xD5KbozptSz3EYPFLZ6aPTRMyyi99aQffVaWBYT34eb,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2eSNtNmdWE6CJE8KfekrqhdUELTefqKo6BxAuVJPNHcm',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2eSNtNmdWE6CJE8KfekrqhdUELTefqKo6BxAuVJPNHcm&amount=2&index=145&proof=7sNQnKU9n6WvaMP8fYQdhsMAH5JPbejSmtwY6wgYY3X8,FE4Tmvr4BLDUisfJUNvKSXxV1fSpJACAjqm2VwdbeQPk,GsrmHZJeUNVggcMx7xavB2QeZJjxuTYgv2B2g5RMiTDa,9xD5KbozptSz3EYPFLZ6aPTRMyyi99aQffVaWBYT34eb,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Cmhz9RCUVXenSGcqi9y18vt3X8ovLRrWzxEd8LAWYdrC',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Cmhz9RCUVXenSGcqi9y18vt3X8ovLRrWzxEd8LAWYdrC&amount=2&index=146&proof=7FzrWaU2ArKXoQy3EhhaFHczBx2PdLnFvoouYDtc7WeA,DunfyzxcYn4wvfvyZ7dcwnX2TMyAsnkvr5KVyrUwTh8f,GsrmHZJeUNVggcMx7xavB2QeZJjxuTYgv2B2g5RMiTDa,9xD5KbozptSz3EYPFLZ6aPTRMyyi99aQffVaWBYT34eb,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'DzZv4eaqkwRK8SoQfaqNtyYdmrbndGxhm3chH4kv5rvh',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=DzZv4eaqkwRK8SoQfaqNtyYdmrbndGxhm3chH4kv5rvh&amount=2&index=147&proof=RYQYbYut8GzPX6MdgyAkGs4NJBAcgriAfXBbGU6g7Tq,DunfyzxcYn4wvfvyZ7dcwnX2TMyAsnkvr5KVyrUwTh8f,GsrmHZJeUNVggcMx7xavB2QeZJjxuTYgv2B2g5RMiTDa,9xD5KbozptSz3EYPFLZ6aPTRMyyi99aQffVaWBYT34eb,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'ZVEkpyXyaBuZA45cm6eytZd5fQKTBUyiHebUpYZqKdd',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=ZVEkpyXyaBuZA45cm6eytZd5fQKTBUyiHebUpYZqKdd&amount=2&index=148&proof=Fbiv9b7DxuG3qbT1ta11y4sbZ1XvHgbPmJkWyGnXjZpw,5Lr6cwy9Q2Jm8sDNhDjNYr1JbQzdbVSa3Ep3n9P7mxon,6QdD9Ag6v4vmF5R9LE4s2wTj2gCFFMH9KAPJ1AJoxqcs,9xD5KbozptSz3EYPFLZ6aPTRMyyi99aQffVaWBYT34eb,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'ApbVhsvyLvdmgoKxXaUh2DU4jvcCbxFiTY5T66mMvJFp',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=ApbVhsvyLvdmgoKxXaUh2DU4jvcCbxFiTY5T66mMvJFp&amount=2&index=149&proof=A1cPWcsc6KSjV92bJrn4GqXnmwpZBwxG3He5ndqFM4HY,5Lr6cwy9Q2Jm8sDNhDjNYr1JbQzdbVSa3Ep3n9P7mxon,6QdD9Ag6v4vmF5R9LE4s2wTj2gCFFMH9KAPJ1AJoxqcs,9xD5KbozptSz3EYPFLZ6aPTRMyyi99aQffVaWBYT34eb,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Gm4unSGzrqnZRJBA29BSnu3MMoft5UNdkABDkJBRXbvJ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Gm4unSGzrqnZRJBA29BSnu3MMoft5UNdkABDkJBRXbvJ&amount=2&index=150&proof=6NsmpNDuSrQonbB56rKdsCSN1aTfQXHV9EgotEHZXyDT,AvNGDF51tHccBSerTW5RSNFngCphGgo2EmBFJCW8WP9P,6QdD9Ag6v4vmF5R9LE4s2wTj2gCFFMH9KAPJ1AJoxqcs,9xD5KbozptSz3EYPFLZ6aPTRMyyi99aQffVaWBYT34eb,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'NcGZCdrLWk86Jt8q26KN2uZ9TPGvvPQ7ELKxtun61Ky',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=NcGZCdrLWk86Jt8q26KN2uZ9TPGvvPQ7ELKxtun61Ky&amount=2&index=151&proof=6ZARzXrfunsUm34S5PXbYJp8sg6aRpRzApkinYRmdk8N,AvNGDF51tHccBSerTW5RSNFngCphGgo2EmBFJCW8WP9P,6QdD9Ag6v4vmF5R9LE4s2wTj2gCFFMH9KAPJ1AJoxqcs,9xD5KbozptSz3EYPFLZ6aPTRMyyi99aQffVaWBYT34eb,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'E7avZQYt9NX4tNHvhbb6CK3DYmiRvhXMj33VLYjH4C7p',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=E7avZQYt9NX4tNHvhbb6CK3DYmiRvhXMj33VLYjH4C7p&amount=2&index=152&proof=H4gnf2FTHwpav49oqYupm1WhzDsfdHetvfgmrnBrhPwV,Hh9nwhByQAKJmPGpjNpVtAGQcaXmbR61MAYSu8MiwUUQ,EBuKAd3Kf7bhKZDQRaifpRDcjSQq1hYALWjp1tWL8CSv,AY1q44waGqLEdXiVV5vyyA3jVbymwiMnHLWGFFLyYykL,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5aEcHH1Jfdi95zW2RaUkDi9mDSAfZddcyRnUoxE8Afok',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5aEcHH1Jfdi95zW2RaUkDi9mDSAfZddcyRnUoxE8Afok&amount=2&index=153&proof=FFr5jienNqT93EAvjVbnYyoNS9dzzFdx7AQGao5Ys1ZK,Hh9nwhByQAKJmPGpjNpVtAGQcaXmbR61MAYSu8MiwUUQ,EBuKAd3Kf7bhKZDQRaifpRDcjSQq1hYALWjp1tWL8CSv,AY1q44waGqLEdXiVV5vyyA3jVbymwiMnHLWGFFLyYykL,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'B9R5h3itYmYJwjoRLMAFBUytJUFvbrkV2rGaZgaMLqti',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=B9R5h3itYmYJwjoRLMAFBUytJUFvbrkV2rGaZgaMLqti&amount=2&index=154&proof=7ZYRfwYamEUAgsjw49oCY3zDyeheeSd6qdDGww64FgKe,GS9pDxMYsUXbvUH1K6SXfiF9yFYBH4p9mSpbWQPsoGmA,EBuKAd3Kf7bhKZDQRaifpRDcjSQq1hYALWjp1tWL8CSv,AY1q44waGqLEdXiVV5vyyA3jVbymwiMnHLWGFFLyYykL,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4ZbGSXJHeM3WnDh71KuLeHmTNVhj6d8ZS5Pis4iWn6Kf',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4ZbGSXJHeM3WnDh71KuLeHmTNVhj6d8ZS5Pis4iWn6Kf&amount=2&index=155&proof=EzAzhe11iy3HhdtFWRvdd7QeNVnzGKDGNPAYhxAo8YUs,GS9pDxMYsUXbvUH1K6SXfiF9yFYBH4p9mSpbWQPsoGmA,EBuKAd3Kf7bhKZDQRaifpRDcjSQq1hYALWjp1tWL8CSv,AY1q44waGqLEdXiVV5vyyA3jVbymwiMnHLWGFFLyYykL,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HRYYiqCYZdF7mnZPMR2bUouWLMJj7qF7ohsuJgGvk3jH',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HRYYiqCYZdF7mnZPMR2bUouWLMJj7qF7ohsuJgGvk3jH&amount=2&index=156&proof=Gw91Px9UZPyenyzYYahdu7tmXyEBo96M1Wh7EjFoTbhL,DQLgrQZ6Szdzh5PyPGdZ2SunzUi4ThgdrK881jDXfVco,2FDVVVL38vYTVbaxCWdNhvzAfjwfuQdxz7sxpZWL15GZ,AY1q44waGqLEdXiVV5vyyA3jVbymwiMnHLWGFFLyYykL,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'J9N8i58SHDqfjFf1HSJLdfw3sj8Z6PMc4WHQgdsQasZG',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=J9N8i58SHDqfjFf1HSJLdfw3sj8Z6PMc4WHQgdsQasZG&amount=2&index=157&proof=GcUHGzLtPUJD9UMGUr9h2vwpifDh7sKMqNXsA7en1vnh,DQLgrQZ6Szdzh5PyPGdZ2SunzUi4ThgdrK881jDXfVco,2FDVVVL38vYTVbaxCWdNhvzAfjwfuQdxz7sxpZWL15GZ,AY1q44waGqLEdXiVV5vyyA3jVbymwiMnHLWGFFLyYykL,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4SYZ1AL8kCzSnmJqQtt1f5chPGA7rU1Zk2gV5WScNb16',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4SYZ1AL8kCzSnmJqQtt1f5chPGA7rU1Zk2gV5WScNb16&amount=2&index=158&proof=5As6gfWAGBkteQDKgPkJMVuZixgoLhJ8d1ZipacqwyRR,9Xg9wQFNpHp1FgKAGV5X38gqdj1EePSjp7s5EZ99Qy6A,2FDVVVL38vYTVbaxCWdNhvzAfjwfuQdxz7sxpZWL15GZ,AY1q44waGqLEdXiVV5vyyA3jVbymwiMnHLWGFFLyYykL,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '714VdzuGZHu2gZJtgP3tZuAVWoD1GAxkNQ4161NgbWES',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=714VdzuGZHu2gZJtgP3tZuAVWoD1GAxkNQ4161NgbWES&amount=2&index=159&proof=9AS3AmRuvr57AQ2jyS624C1EU7dANAqz44NEK5m5JpfS,9Xg9wQFNpHp1FgKAGV5X38gqdj1EePSjp7s5EZ99Qy6A,2FDVVVL38vYTVbaxCWdNhvzAfjwfuQdxz7sxpZWL15GZ,AY1q44waGqLEdXiVV5vyyA3jVbymwiMnHLWGFFLyYykL,4FkzRUe3docyaPyyiRsxH9hc5jattkMJD6HDv2BKgLDb,8fSe2wZ58GYVjWaiSeUNT5rR6oS8FFex8J6uVu4bGboX,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HXq13w784E5qfbChrnYMQ4FPLHki41EdtfQnqk1wfSUi',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HXq13w784E5qfbChrnYMQ4FPLHki41EdtfQnqk1wfSUi&amount=2&index=160&proof=7vVYnwNDB6SwniDoGbvdUjqG8Y8Gf85A62HaaVz3vxsi,7aLFKTRbjsQgXovxVVKJcvYDuEYuxFdWZZHyNCi6gAGs,Dp5gSxVRZR4gS6c6M6mePgcc8ma57jz6z6ncHNU3Ao4G,BiarRouSjZ4e82HdzNHLALMsPBpGYiUEMT12M7yfPxWY,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'F37ywDPTXgZcNno2YqaFT8tuESiU3Boaisuhxb4Arpbv',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=F37ywDPTXgZcNno2YqaFT8tuESiU3Boaisuhxb4Arpbv&amount=2&index=161&proof=BJfPfN37yseu7PCFxhLFBHAt6AMaFog4uNUCqkqk8n8U,7aLFKTRbjsQgXovxVVKJcvYDuEYuxFdWZZHyNCi6gAGs,Dp5gSxVRZR4gS6c6M6mePgcc8ma57jz6z6ncHNU3Ao4G,BiarRouSjZ4e82HdzNHLALMsPBpGYiUEMT12M7yfPxWY,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'q6Uv58NUF2KeenWqpb2ZqkTjnH18XDaUJRrocUxz69C',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=q6Uv58NUF2KeenWqpb2ZqkTjnH18XDaUJRrocUxz69C&amount=2&index=162&proof=7RE2YhU5wAogxaTMBwdTXxZ5U7WPVL9BFFyG1zEEciUs,GMEbaL1oNW3DfanARQTobFfKqPMydQo7Vz9boc37JF2D,Dp5gSxVRZR4gS6c6M6mePgcc8ma57jz6z6ncHNU3Ao4G,BiarRouSjZ4e82HdzNHLALMsPBpGYiUEMT12M7yfPxWY,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9XZhGEFCV1pvFvaHueU1KBqG9F4XN7YgrsnP2vrCSpeJ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9XZhGEFCV1pvFvaHueU1KBqG9F4XN7YgrsnP2vrCSpeJ&amount=2&index=163&proof=Gc3K7HNVrgvPGtbYNEmtnKKZbwUddTNgusaxaUkW8zHT,GMEbaL1oNW3DfanARQTobFfKqPMydQo7Vz9boc37JF2D,Dp5gSxVRZR4gS6c6M6mePgcc8ma57jz6z6ncHNU3Ao4G,BiarRouSjZ4e82HdzNHLALMsPBpGYiUEMT12M7yfPxWY,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '72DtDmfcmUhLDY9BFfFFjSKd9kfiarjVtfY34AQt1sEn',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=72DtDmfcmUhLDY9BFfFFjSKd9kfiarjVtfY34AQt1sEn&amount=2&index=164&proof=BS5idrFCRHbzPfX553bGbkDRSCTNBhWXYkspt8AVC7up,2yWuRoLgGoh1uR4t8ESAWMuRKBAqT6UfmbTUUH5LsfnE,76SimPRuXmSiS43bqqnyJXWaPTcUEwTAaotA6dE9Gn4V,BiarRouSjZ4e82HdzNHLALMsPBpGYiUEMT12M7yfPxWY,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7r9N6Tud4WjnBhnCY6M6m8Skrz9PHk7Z8TXNvjSRKghf',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7r9N6Tud4WjnBhnCY6M6m8Skrz9PHk7Z8TXNvjSRKghf&amount=2&index=165&proof=C3TjLJBchpchgj6pCnvkrFAxwwMu1eF6Fx63919qmDMq,2yWuRoLgGoh1uR4t8ESAWMuRKBAqT6UfmbTUUH5LsfnE,76SimPRuXmSiS43bqqnyJXWaPTcUEwTAaotA6dE9Gn4V,BiarRouSjZ4e82HdzNHLALMsPBpGYiUEMT12M7yfPxWY,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '92Ddcgf3EoJPk6h125XbZwk98Ahq9DaqacKACytrBryJ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=92Ddcgf3EoJPk6h125XbZwk98Ahq9DaqacKACytrBryJ&amount=2&index=166&proof=AXbeBsjYKTS5sXWAcgwFY6LJriFiQPNsDxxr8SH1XWYa,EEMAhGubp5PhHgPJb9qFkrgdYKikJEj642rXgxCBug3D,76SimPRuXmSiS43bqqnyJXWaPTcUEwTAaotA6dE9Gn4V,BiarRouSjZ4e82HdzNHLALMsPBpGYiUEMT12M7yfPxWY,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4DuzzTNEH9HmgNtScTh3dCQVCj4oRk9QYAqqLJE3Gu4N',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4DuzzTNEH9HmgNtScTh3dCQVCj4oRk9QYAqqLJE3Gu4N&amount=2&index=167&proof=8UTaj8i8BPRr1bsHLLV8Gfu3BiQXp97ogQPkZZWx4g7K,EEMAhGubp5PhHgPJb9qFkrgdYKikJEj642rXgxCBug3D,76SimPRuXmSiS43bqqnyJXWaPTcUEwTAaotA6dE9Gn4V,BiarRouSjZ4e82HdzNHLALMsPBpGYiUEMT12M7yfPxWY,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '7XdruLtUFQpNPuRp6N1yK9Km8wMLSDvy59vXqywf3aYs',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=7XdruLtUFQpNPuRp6N1yK9Km8wMLSDvy59vXqywf3aYs&amount=2&index=168&proof=8HaSK1qU7ydvodS1JbopNAF4qa4Yc25vvTKXFw7Ppuum,4bBG9hxpNRjbuZxZd2cDg5EzbwCGwY4hD558gZFjjp1T,eAyDdaTCT1LPkZ1CbKAvyw9dXLWHUQ96xtaEuosinGo,8CtiyJuzVMvc9W7AfJj1EVrE7j7SBTQHFwXToL1Ez3r8,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'E9mCYAht7LkqXEk5sUP9PVZLpotnpex842eYogkfezED',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=E9mCYAht7LkqXEk5sUP9PVZLpotnpex842eYogkfezED&amount=2&index=169&proof=7KprAgy1QQiFVifDTBjuuWBpphDyrC7vzgetVfdvVXVs,4bBG9hxpNRjbuZxZd2cDg5EzbwCGwY4hD558gZFjjp1T,eAyDdaTCT1LPkZ1CbKAvyw9dXLWHUQ96xtaEuosinGo,8CtiyJuzVMvc9W7AfJj1EVrE7j7SBTQHFwXToL1Ez3r8,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'AHxZGw1wsnkPyxgMeWnYJCyjSzyezPKdV2CzJQsBfmYr',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=AHxZGw1wsnkPyxgMeWnYJCyjSzyezPKdV2CzJQsBfmYr&amount=2&index=170&proof=HRMKqiXybfzvBj9TSrkAt7kPtVQMo18vwqcFraXqyZpR,3QQjnmsLNtNncx5jVur9iAtSMm45A4v1Qhbz3XebeWqP,eAyDdaTCT1LPkZ1CbKAvyw9dXLWHUQ96xtaEuosinGo,8CtiyJuzVMvc9W7AfJj1EVrE7j7SBTQHFwXToL1Ez3r8,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'BKGa1ZZe2bHYdKCg5vsdA67WbiTs9Zju2Gv5wmVQDTQX',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=BKGa1ZZe2bHYdKCg5vsdA67WbiTs9Zju2Gv5wmVQDTQX&amount=2&index=171&proof=Ck2rePY2oq8w54jvG3UWiWjaoxbwRiBKx75vtfomhi7W,3QQjnmsLNtNncx5jVur9iAtSMm45A4v1Qhbz3XebeWqP,eAyDdaTCT1LPkZ1CbKAvyw9dXLWHUQ96xtaEuosinGo,8CtiyJuzVMvc9W7AfJj1EVrE7j7SBTQHFwXToL1Ez3r8,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CMwjeTPVRodkv23f6ufnaHtK4XmGcFJBiheQCmaHN8NX',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CMwjeTPVRodkv23f6ufnaHtK4XmGcFJBiheQCmaHN8NX&amount=2&index=172&proof=CzL3Vt36yvHVJ9EGGMb26mefeCp7qnGyDr51cmto1t2n,FynB59HBqLepc9rMJG351dXcgGCtuYqFbQZCdLfSbCqq,CgWBy6d5WhqU6LYtNdmc7Twi6Vi4o1QUgznBx8rjbmo9,8CtiyJuzVMvc9W7AfJj1EVrE7j7SBTQHFwXToL1Ez3r8,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HCvWXyCZd61nZ4vp1pdP8g7BdnvD8yoZqEsPw22igD3M',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HCvWXyCZd61nZ4vp1pdP8g7BdnvD8yoZqEsPw22igD3M&amount=2&index=173&proof=9iZg6enpoLE2zrEoXKkYvYxp5G6RfTqnjJGbHE3qDpZd,FynB59HBqLepc9rMJG351dXcgGCtuYqFbQZCdLfSbCqq,CgWBy6d5WhqU6LYtNdmc7Twi6Vi4o1QUgznBx8rjbmo9,8CtiyJuzVMvc9W7AfJj1EVrE7j7SBTQHFwXToL1Ez3r8,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'AsNnpaufDtAYcKmFi7HsdLq5vAFXyBUTKBmtUyFNW3Y7',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=AsNnpaufDtAYcKmFi7HsdLq5vAFXyBUTKBmtUyFNW3Y7&amount=2&index=174&proof=4FgwPR7NNCVq13JpxVfF7EbzRNbzVoBNR8SG6MpfNKCA,DeRuqMAnpDwUfuV9xWUNLobc6UHJFERtGJcxnPSL3KaT,CgWBy6d5WhqU6LYtNdmc7Twi6Vi4o1QUgznBx8rjbmo9,8CtiyJuzVMvc9W7AfJj1EVrE7j7SBTQHFwXToL1Ez3r8,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HYn1uX2HJD2kEJG3vn3PbuUQmqQX7WfMzbXPDQQoFRd2',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HYn1uX2HJD2kEJG3vn3PbuUQmqQX7WfMzbXPDQQoFRd2&amount=2&index=175&proof=5niwWDTP5Ro6SDa1z8E6iT6xSMLvA5ksFfoDuL91krD6,DeRuqMAnpDwUfuV9xWUNLobc6UHJFERtGJcxnPSL3KaT,CgWBy6d5WhqU6LYtNdmc7Twi6Vi4o1QUgznBx8rjbmo9,8CtiyJuzVMvc9W7AfJj1EVrE7j7SBTQHFwXToL1Ez3r8,8smD9QicBDY8LYCZmZfGSrRLJ6ceS9zf4Royvuw3X2oA,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CCwva9ANbhcLT46ebMCTUbqi8Ln9d8hFx8CdgDoWR4Uj',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CCwva9ANbhcLT46ebMCTUbqi8Ln9d8hFx8CdgDoWR4Uj&amount=2&index=176&proof=CzyeTJrc3HNFvqwGxFVY54ETZ6aJM6okVaH8aLMCg7Xq,5RspJNmqkWCE3G3dGwcn3MuzYAMb7QMzb4oW9JzevvMT,snuVR8EgrpYE9abKQqzwv2vWxxZ8EboD7LTS6dM3uR2,AfFPDqU5MmGix1kHw3aumpSCgAiDeWTtsm3DYYVRw2ap,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6J8tK3QF4eUMqNXjsrWWCyZxkCDGmhd79ib7FEpb2L2k',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6J8tK3QF4eUMqNXjsrWWCyZxkCDGmhd79ib7FEpb2L2k&amount=2&index=177&proof=3BkFRpHTHGbddkPQ9XVYdXwZwBq1Kqz4oivzEBvpA8H1,5RspJNmqkWCE3G3dGwcn3MuzYAMb7QMzb4oW9JzevvMT,snuVR8EgrpYE9abKQqzwv2vWxxZ8EboD7LTS6dM3uR2,AfFPDqU5MmGix1kHw3aumpSCgAiDeWTtsm3DYYVRw2ap,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5XnYGrEvUfL8unp4PzVZSkG3Pv3SGHL6Vnf5QQypWJWw',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5XnYGrEvUfL8unp4PzVZSkG3Pv3SGHL6Vnf5QQypWJWw&amount=2&index=178&proof=H1k6udjKHjMG5XBDyjP4vWWvVgC2bmLACxtCgMtGvn36,2aLyi7cP6RK1Wq4gqt3LntqvSXTHMNG3wKR9G6a54UBw,snuVR8EgrpYE9abKQqzwv2vWxxZ8EboD7LTS6dM3uR2,AfFPDqU5MmGix1kHw3aumpSCgAiDeWTtsm3DYYVRw2ap,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'CCDy8p4gZUVGpFuEFDSNfToLGpdb44oZNxymtpmdz93h',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=CCDy8p4gZUVGpFuEFDSNfToLGpdb44oZNxymtpmdz93h&amount=2&index=179&proof=2oRPY9NkJxtpMiG1u4TtkUstqEbsuqSEMyzNh6HpCZLs,2aLyi7cP6RK1Wq4gqt3LntqvSXTHMNG3wKR9G6a54UBw,snuVR8EgrpYE9abKQqzwv2vWxxZ8EboD7LTS6dM3uR2,AfFPDqU5MmGix1kHw3aumpSCgAiDeWTtsm3DYYVRw2ap,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '47toiUSgVWyqywNZBjKVigkKyRWgGdFUakRBVZLRNsyF',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=47toiUSgVWyqywNZBjKVigkKyRWgGdFUakRBVZLRNsyF&amount=2&index=180&proof=ExqPTDHGcZFNVzG2R13fNRmZTqqrrcJm6ibR3chmJYC4,HwS7e2H7CAJ32byCaNVDUrF6nPuoZxbYTDU1H6kdksgR,7JQTCT8R4N3sremiZQwqAfJYxzGCCfzmMyU85tAf36DA,AfFPDqU5MmGix1kHw3aumpSCgAiDeWTtsm3DYYVRw2ap,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HWyN17wUAbUr8JwmM731jdZY4rxhyrDwFpB4brUvyfst',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HWyN17wUAbUr8JwmM731jdZY4rxhyrDwFpB4brUvyfst&amount=2&index=181&proof=GNEU4K1UJy1Tf9eY1e2qfj6KZmp6j8SU8b2YdLuNv6YY,HwS7e2H7CAJ32byCaNVDUrF6nPuoZxbYTDU1H6kdksgR,7JQTCT8R4N3sremiZQwqAfJYxzGCCfzmMyU85tAf36DA,AfFPDqU5MmGix1kHw3aumpSCgAiDeWTtsm3DYYVRw2ap,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '2Y3aLsX9kfMjinttw8cqb5sU8LQsdLtAjHRmHk2Jmcq3',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=2Y3aLsX9kfMjinttw8cqb5sU8LQsdLtAjHRmHk2Jmcq3&amount=2&index=182&proof=AMz7YmQsfcfy6ArBMY9wnXycBCFtfz3PS2MND5AEvBdD,HLj6zKmFnMYfMSzZQfvotTixjmsdvLWn6TpXpSZBmcsH,7JQTCT8R4N3sremiZQwqAfJYxzGCCfzmMyU85tAf36DA,AfFPDqU5MmGix1kHw3aumpSCgAiDeWTtsm3DYYVRw2ap,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Fs5nSbGP6pRevuhrGwvrEdBBd2thPwoJeX9r4gbRH7X1',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Fs5nSbGP6pRevuhrGwvrEdBBd2thPwoJeX9r4gbRH7X1&amount=2&index=183&proof=E9PN8PBMa3ixYbwiRmUUWTpKKCXwKABT92ZuSfkG9XKF,HLj6zKmFnMYfMSzZQfvotTixjmsdvLWn6TpXpSZBmcsH,7JQTCT8R4N3sremiZQwqAfJYxzGCCfzmMyU85tAf36DA,AfFPDqU5MmGix1kHw3aumpSCgAiDeWTtsm3DYYVRw2ap,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HDWQWvnumBbJQrpJ8jot35FheSJMjqQXRpzJuewwGXWL',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HDWQWvnumBbJQrpJ8jot35FheSJMjqQXRpzJuewwGXWL&amount=2&index=184&proof=3tdqssfKT6eWqfZjJZz6CuMPQVKSN5kBbfhbWu8Lv7WV,FCfUk26K2YxoJBnt9BKLw7uty3eMmYQhZogxCjfCnCbB,Egt2VnodQmcTNj4aBT2Dj3CKFXuJgK1H8UBdcobZ3PNe,Bu6sVxLhW61wiTs7S7F75JcUcsYrXoHp8cQgR4zSecG4,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '4Zxv6bMuyzMtTykfZ65fAFD8di4tNEvXzQnonjBpc2bP',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=4Zxv6bMuyzMtTykfZ65fAFD8di4tNEvXzQnonjBpc2bP&amount=2&index=185&proof=Cet52FGbtafEsA2UAECHwjTYZLaUKZ5mxs83uYDbXvCt,FCfUk26K2YxoJBnt9BKLw7uty3eMmYQhZogxCjfCnCbB,Egt2VnodQmcTNj4aBT2Dj3CKFXuJgK1H8UBdcobZ3PNe,Bu6sVxLhW61wiTs7S7F75JcUcsYrXoHp8cQgR4zSecG4,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '83eCSb1pTjbw3yfRbaQTFxufjCfcn31GTEVFRAiqYBs6',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=83eCSb1pTjbw3yfRbaQTFxufjCfcn31GTEVFRAiqYBs6&amount=2&index=186&proof=EPjQqjUPur3NxvdxSUsYaSN3XMLmegYd9KSRJRbz8oDf,URXQg7D7tqcCzKetGBSEAB9v24wAqCW7Njh26Wf8DL3,Egt2VnodQmcTNj4aBT2Dj3CKFXuJgK1H8UBdcobZ3PNe,Bu6sVxLhW61wiTs7S7F75JcUcsYrXoHp8cQgR4zSecG4,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '5jLk5Va3HE9SaNe1UXhveSs7SZ6wGwBV9G4Sb4cUmsXW',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=5jLk5Va3HE9SaNe1UXhveSs7SZ6wGwBV9G4Sb4cUmsXW&amount=2&index=187&proof=GQAhfB3iN5WByjFQMWF6j5RrxwwcMN9meJ9SqDHJqZZv,URXQg7D7tqcCzKetGBSEAB9v24wAqCW7Njh26Wf8DL3,Egt2VnodQmcTNj4aBT2Dj3CKFXuJgK1H8UBdcobZ3PNe,Bu6sVxLhW61wiTs7S7F75JcUcsYrXoHp8cQgR4zSecG4,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '37EGP4yikDo8gG1Q9uYiUE42NKk2Fv1nBQb2F5rRLEiH',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=37EGP4yikDo8gG1Q9uYiUE42NKk2Fv1nBQb2F5rRLEiH&amount=2&index=188&proof=Bj9MXZt5Qzu4ugqaWQ4vZDC2tXbUwTNNpyLyo4JqD1tA,4Nx6Rr8UqS1L3UN4f8RPWAn635uLEu1qZBGAfjdaW92C,7qnxNYwnXHW3isjsTDwPFK65pSgBUk9xQ2VJeBaun33g,Bu6sVxLhW61wiTs7S7F75JcUcsYrXoHp8cQgR4zSecG4,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EmL4avJEjGFDG3k8mT4GALHMUxBpP21BBKhDpjKKerxw',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EmL4avJEjGFDG3k8mT4GALHMUxBpP21BBKhDpjKKerxw&amount=2&index=189&proof=BdKMrCni7294dfBHYHqxFiZkdmscNnT9mQfpmirBYxQQ,4Nx6Rr8UqS1L3UN4f8RPWAn635uLEu1qZBGAfjdaW92C,7qnxNYwnXHW3isjsTDwPFK65pSgBUk9xQ2VJeBaun33g,Bu6sVxLhW61wiTs7S7F75JcUcsYrXoHp8cQgR4zSecG4,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'E4w3s7UGnCfaxasG2isw296i4pHwWPjxmo3ZPUuAeYLH',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=E4w3s7UGnCfaxasG2isw296i4pHwWPjxmo3ZPUuAeYLH&amount=2&index=190&proof=CYgqshZT5xV8adauu6vNi1JCsC5rqNsBJNXkgUHp5Jnd,9YFHLTXWDyVsJMvvXnDHwK76btTpKd38oV5fTnCj1V7P,7qnxNYwnXHW3isjsTDwPFK65pSgBUk9xQ2VJeBaun33g,Bu6sVxLhW61wiTs7S7F75JcUcsYrXoHp8cQgR4zSecG4,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Ho2D76syPedzEjjyuUiHHj5EXcfQtT7US32MVMbwSBqT',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Ho2D76syPedzEjjyuUiHHj5EXcfQtT7US32MVMbwSBqT&amount=2&index=191&proof=47q5aqAXorHcPNEsALfqSbf9Qa1qhPhicfLcp3jCu34i,9YFHLTXWDyVsJMvvXnDHwK76btTpKd38oV5fTnCj1V7P,7qnxNYwnXHW3isjsTDwPFK65pSgBUk9xQ2VJeBaun33g,Bu6sVxLhW61wiTs7S7F75JcUcsYrXoHp8cQgR4zSecG4,4Vv1TUfrb5VzYZ9VhxBW19xs6ZhzQvHetrLqk3yLHMKC,FmpoJ3io6Bec9SyyW9qohgSDJjmPt9zuBDqpiXayWXoq,8dEPtcQFeomsSPcDGtdRq3p4NsejwPaDs1Gnso2ZxR6E,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'DMgHAQYQcmyX61HE64Vx4pAGasRNj1bpkDpjArYM7vF',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=DMgHAQYQcmyX61HE64Vx4pAGasRNj1bpkDpjArYM7vF&amount=2&index=192&proof=GfddbVc3XFAGzbPyxczFC1brAWawx8ZhoRuwnoMRk6Gx,6hXmLyWDBkw81RFBAfbTjK6QuqiXNJdq63tBj1G4ifXX,GkYN7PXpo4Bri5J6fjsTLmCFB8Se86VvBvJZUHguBmjW,6t2As71jUVW1cKq9KziHRNo4zQ7RuX6dBjoKnUuyjtZG,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'FvdMujco3bPPGfMst4DUWHhzVbP2d5dYSEQrwgHBZbjc',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=FvdMujco3bPPGfMst4DUWHhzVbP2d5dYSEQrwgHBZbjc&amount=2&index=193&proof=5RX15fRegikjevvt4dgbWeRmvTom4SveRLWzLLnAbFAj,6hXmLyWDBkw81RFBAfbTjK6QuqiXNJdq63tBj1G4ifXX,GkYN7PXpo4Bri5J6fjsTLmCFB8Se86VvBvJZUHguBmjW,6t2As71jUVW1cKq9KziHRNo4zQ7RuX6dBjoKnUuyjtZG,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'eNWcGopX4o6JxWKt1xRdxrPyCuSXn6Q2L92nMe1QP2A',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=eNWcGopX4o6JxWKt1xRdxrPyCuSXn6Q2L92nMe1QP2A&amount=2&index=194&proof=DLYEDJv2JMfTkWfUG7FWBfr4CFHBcWAKdo7zH89azkL4,DuToso9GYTfcBBFfjED7DjHrc5NjaCyhmo8uUnmrc67Q,GkYN7PXpo4Bri5J6fjsTLmCFB8Se86VvBvJZUHguBmjW,6t2As71jUVW1cKq9KziHRNo4zQ7RuX6dBjoKnUuyjtZG,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'EoMLdHn4JfV26HS29FFmcA4k57QEZsbb2Fttke5HWMbV',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=EoMLdHn4JfV26HS29FFmcA4k57QEZsbb2Fttke5HWMbV&amount=2&index=195&proof=ARvqJvZPoah1BpHPyvbgHTTUnBCGQ8SF1mXS2XRpNPn9,DuToso9GYTfcBBFfjED7DjHrc5NjaCyhmo8uUnmrc67Q,GkYN7PXpo4Bri5J6fjsTLmCFB8Se86VvBvJZUHguBmjW,6t2As71jUVW1cKq9KziHRNo4zQ7RuX6dBjoKnUuyjtZG,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '3LRUFyssvHiFPYMV28MXfxxizNeiuwfpraoajMkWrpzb',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=3LRUFyssvHiFPYMV28MXfxxizNeiuwfpraoajMkWrpzb&amount=2&index=196&proof=Ktso69DiRStdwNRjAAqJkqxE51RB8W5VkjLSZbhLFsp,GeCUf5odSDfzvsPRui4wyZF2UxPj1fLS2tbm76yQUEbq,ARpEdxZ63Y9nBW6bsL8Q4CYwxwkKHhoJF2Q7h8aCU9pn,6t2As71jUVW1cKq9KziHRNo4zQ7RuX6dBjoKnUuyjtZG,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'HFadR3m5Fkz9bZFQZSdjTW79SVmKPTeaPHtpE3LvYvK',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=HFadR3m5Fkz9bZFQZSdjTW79SVmKPTeaPHtpE3LvYvK&amount=2&index=197&proof=FWuPtVqoU2VzsrvD2Li7ijqpr8j5rVCEd2o3AVsq7ggf,GeCUf5odSDfzvsPRui4wyZF2UxPj1fLS2tbm76yQUEbq,ARpEdxZ63Y9nBW6bsL8Q4CYwxwkKHhoJF2Q7h8aCU9pn,6t2As71jUVW1cKq9KziHRNo4zQ7RuX6dBjoKnUuyjtZG,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '8oftkEf8YHqr1JwQuGGtPTqtMQdKRxfTyd5U64aMWcnZ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=8oftkEf8YHqr1JwQuGGtPTqtMQdKRxfTyd5U64aMWcnZ&amount=2&index=198&proof=9LxETPGfscDE1VmvuukYCGZrmytFSAtN23Z9jjscys6F,DzoitTKBuQQJEVLFZivB26iq4kvB1XHoRNwhLQa7pawj,ARpEdxZ63Y9nBW6bsL8Q4CYwxwkKHhoJF2Q7h8aCU9pn,6t2As71jUVW1cKq9KziHRNo4zQ7RuX6dBjoKnUuyjtZG,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '21kvJmCeiqXR4sDQsgd2mZyfR29q2WAmqUYukumr7DcE',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=21kvJmCeiqXR4sDQsgd2mZyfR29q2WAmqUYukumr7DcE&amount=2&index=199&proof=FkSHxoBYxTW7QqDSHHkNSRo3TZGQyj15VE62MTZwp3Xd,DzoitTKBuQQJEVLFZivB26iq4kvB1XHoRNwhLQa7pawj,ARpEdxZ63Y9nBW6bsL8Q4CYwxwkKHhoJF2Q7h8aCU9pn,6t2As71jUVW1cKq9KziHRNo4zQ7RuX6dBjoKnUuyjtZG,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'Vn4YyYwjSBPMaMMNA2oj6LMHpNNaP9pZqSn5UdM2VTg',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=Vn4YyYwjSBPMaMMNA2oj6LMHpNNaP9pZqSn5UdM2VTg&amount=2&index=200&proof=6ygbLeh67xv34wzdAEpXTX9oU3E1Lht8QdcDhvrT9FV1,8eRP6CrxRYF5e9RjW6KQ4xXLyUc8iN77dgis12q3LSz7,3gGnqEBPaiADQweTZGXMD8X95kMcb24Z8J7ETty9fcFr,EKgdVg8bFWrymeZcEmpKw4vkrsaQHWYYLLWX5CH8u8gV,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '9t4BXJ6pxDiRnvFcgkygUpTuFohZ7hhURtjU3mCTrTGJ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=9t4BXJ6pxDiRnvFcgkygUpTuFohZ7hhURtjU3mCTrTGJ&amount=2&index=201&proof=EZjv6pQKxrepZ2bgXHHcFSAWAaUzULeBmkhP2jJnxHsn,8eRP6CrxRYF5e9RjW6KQ4xXLyUc8iN77dgis12q3LSz7,3gGnqEBPaiADQweTZGXMD8X95kMcb24Z8J7ETty9fcFr,EKgdVg8bFWrymeZcEmpKw4vkrsaQHWYYLLWX5CH8u8gV,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: '6heGDfbqgbYJdUAyhWLtzRJ1MRMn7Phuti4H3BoqxUkZ',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=6heGDfbqgbYJdUAyhWLtzRJ1MRMn7Phuti4H3BoqxUkZ&amount=2&index=202&proof=FT1uSRJ2AVoSeM9DVap4iZwLDaxiHDDFcLNnHnvhBWin,EGYxkfmJP4jYodFoxSLCX6FMuZGSCJRxZcNUHkVWyYb8,3gGnqEBPaiADQweTZGXMD8X95kMcb24Z8J7ETty9fcFr,EKgdVg8bFWrymeZcEmpKw4vkrsaQHWYYLLWX5CH8u8gV,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'ATaWW4x9j1jWWNfD88pUUXdecPwZMJu8BnY2kFaxs86c',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=ATaWW4x9j1jWWNfD88pUUXdecPwZMJu8BnY2kFaxs86c&amount=2&index=203&proof=G3cphm53ruH2ZHSM5LguaKgpj7uFFjw4uUVD9RBj3NJm,EGYxkfmJP4jYodFoxSLCX6FMuZGSCJRxZcNUHkVWyYb8,3gGnqEBPaiADQweTZGXMD8X95kMcb24Z8J7ETty9fcFr,EKgdVg8bFWrymeZcEmpKw4vkrsaQHWYYLLWX5CH8u8gV,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+  {
+    handle: 'J6VzekP1u9FbRcrGanZM8SNt1PAoqq9NcJc9HmmxxkSH',
+    amount: 2,
+    url: 'https://jollysanta.dev/claim?distributor=8NN1yz1Tzq4xHyS1eQyEXJ1KiBQv1KwvEmYqLyEEM3it&handle=J6VzekP1u9FbRcrGanZM8SNt1PAoqq9NcJc9HmmxxkSH&amount=2&index=204&proof=2iADG1qrkxoYZ91e2uGX1aUBiix6DqyZe7X1VQJzwYUz,EKgdVg8bFWrymeZcEmpKw4vkrsaQHWYYLLWX5CH8u8gV,8VwxiKtbENb4aBZrk3KdrtHyURY77zUVyri8BtgyAz6u,EFnipPL5YoebQUXvuQpCCdsJXTNaSuhE6z5bJd9bZeMS&pin=NA&config=7pRT4JYU1QPERuPTV9mLvqzwihZka2DPduuBHHJM4CAQ&uuid=7pRT4J',
+  },
+];
+
+export const Search = () => {
+  const [searched, setSearched] = React.useState<boolean>(false);
+  const [url, setUrl] = React.useState<string>('');
+
+  const handleSubmit = (values, actions) => {
+    actions.setSubmitting(true);
+    const thang = _find(distributionList, { handle: values.address });
+    if (thang) {
+      setUrl(thang.url);
+    }
+    actions.setSubmitting(false);
+    setSearched(true);
+  };
+
+  return (
+    <Paper style={{ backgroundColor: 'green' }}>
+      <Typography
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-start',
+          marginLeft: '12px',
+        }}
+        variant="h5"
+      >
+        Enter Solana Wallet Address
+      </Typography>
+      <Formik initialValues={{ address: '' }} onSubmit={handleSubmit}>
+        {() => (
+          <Form>
+            <Box>
+              <Field
+                style={{ width: '95%', marginTop: '10px' }}
+                name="address"
+                placeholder="Solana Wallet Address"
+              />
+              <Button
+                style={{
+                  backgroundColor: 'black',
+                  color: 'white',
+                  width: '30%',
+                  marginTop: '10px',
+                  marginBottom: '10px',
+                }}
+                type="submit"
+              >
+                Search
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
+      {searched &&
+        (url !== '' ? (
+          <Box>
+            <h3>
+              Address found:&nbsp;&nbsp;
+              <a
+                href={url}
+                style={{ color: 'white' }}
+                target="_blank"
+                rel="noreferrer"
+              >
+                Click here to go to pre-sale.
+              </a>
+            </h3>
+          </Box>
+        ) : (
+          <Box>
+            <p>No result found.</p>
+          </Box>
+        ))}
+    </Paper>
+  );
+};
