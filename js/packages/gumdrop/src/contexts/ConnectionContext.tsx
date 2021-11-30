@@ -28,8 +28,7 @@ export type ENV = 'mainnet-beta' | 'testnet' | 'devnet' | 'localnet';
 export const ENDPOINTS = [
   {
     name: 'mainnet-beta' as ENV,
-    endpoint:
-      'https://falling-icy-glade.solana-mainnet.quiknode.pro/e17e601a8d32524d392487c52c8b13ff1e15d1ed/',
+    endpoint: 'https://api.mainnet-beta.solana.com',
     ChainId: ChainId.MainnetBeta,
   },
   {
