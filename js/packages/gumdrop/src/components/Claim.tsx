@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps, useHistory } from 'react-router-dom';
 import queryString from 'query-string';
 
 import {
@@ -28,6 +28,7 @@ import {
   Token,
   TOKEN_PROGRAM_ID,
 } from '@solana/spl-token';
+import _find from 'lodash/find';
 import { notify } from '@oyster/common';
 import { sha256 } from 'js-sha256';
 import BN from 'bn.js';
@@ -41,6 +42,7 @@ import {
   SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
   TOKEN_METADATA_PROGRAM_ID,
 } from '../utils/ids';
+import distributionList from '../dist-list.json';
 import {
   getCandyMachine,
   getCandyMachineAddress,
@@ -679,6 +681,18 @@ type ClaimTransactions = {
 export const Claim = (props: RouteComponentProps<ClaimProps>) => {
   const connection = useConnection();
   const wallet = useWallet();
+  const history = useHistory();
+
+  React.useEffect(() => {
+    const match: any = _find(distributionList, {
+      handle: wallet?.publicKey?.toBase58(),
+    });
+
+    if (match?.url) {
+      const params = match?.url.split('?')[1];
+      history.push(`/claim?${params}`);
+    }
+  }, [wallet.publicKey]);
 
   let query = props.location.search;
   if (query && query.length > 0) {
