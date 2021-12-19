@@ -1175,8 +1175,8 @@ export const Claim = (props: RouteComponentProps<ClaimProps>) => {
           }}
         >
           {asyncNeedsTemporalSigner
-            ? `Claim 1 Jolly Santa Gift (${amountStr} available to claim)`
-            : `Claim 1 Jolly Santa Gift (${amountStr} available to claim)`}
+            ? `Claim 1 Jolly Santa Gift (${amountStr} total available to claim)`
+            : `Claim 1 Jolly Santa Gift (${amountStr} total available to claim)`}
         </Button>
         {loading && loadingProgress()}
       </Box>
