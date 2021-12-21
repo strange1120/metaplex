@@ -1,5 +1,6 @@
 import React from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
+import { useHistory } from 'react-router-dom';
 import { ENDPOINTS, useConnectionConfig } from '../../contexts';
 import { notify, shortenAddress } from '@oyster/common';
 import { CopyOutlined } from '@ant-design/icons';
@@ -16,6 +17,7 @@ import {
 export const Settings = () => {
   const { disconnect, publicKey } = useWallet();
   const { setEndpoint, env, endpoint } = useConnectionConfig();
+  const history = useHistory();
   const { setVisible } = useWalletModal();
   const open = React.useCallback(() => setVisible(true), [setVisible]);
   const { setModal } = useModal();
@@ -24,6 +26,15 @@ export const Settings = () => {
     setModal(ModalEnum.WALLET);
     setVisible(true);
   }, [setModal, setVisible]);
+
+  const handleDisconnect = React.useCallback(() => {
+    try {
+      disconnect();
+      history.push('/claim');
+    } catch (err) {
+      return err;
+    }
+  }, []);
 
   const connectedActions = [
     {
@@ -52,7 +63,7 @@ export const Settings = () => {
       inner: () => 'Change\u00A0Wallet',
     },
     {
-      click: () => disconnect().catch(),
+      click: () => handleDisconnect(),
       inner: () => `Disconnect\u00A0(${env})`,
       expandedExtra: {
         // these are interepreted as props. TODO: specific types

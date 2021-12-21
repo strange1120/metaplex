@@ -1144,7 +1144,7 @@ export const Claim = (props: RouteComponentProps<ClaimProps>) => {
         <Button
           disabled={!wallet.connected || !allFieldsPopulated || loading}
           variant="contained"
-          style={{ width: '100%' }}
+          style={{ width: '100%', backgroundColor: '#30D5C8' }}
           color={asyncNeedsTemporalSigner ? 'primary' : 'success'}
           onClick={e => {
             setLoading(true);
@@ -1175,8 +1175,8 @@ export const Claim = (props: RouteComponentProps<ClaimProps>) => {
           }}
         >
           {asyncNeedsTemporalSigner
-            ? `Claim 1 Jolly Santa Gift (${amountStr} total available to claim)`
-            : `Claim 1 Jolly Santa Gift (${amountStr} total available to claim)`}
+            ? `Claim 1 CyberMythic II (${amountStr} total available to claim)`
+            : `Claim 1 CyberMythic II (${amountStr} total available to claim)`}
         </Button>
         {loading && loadingProgress()}
       </Box>

@@ -13,7 +13,7 @@ function App() {
       className="App"
       style={{
         display: 'flex',
-        backgroundColor: '#ea4630',
+        backgroundColor: '#000080',
         height: '100vh',
         justifyContent: 'center',
         alignItems: 'center',
