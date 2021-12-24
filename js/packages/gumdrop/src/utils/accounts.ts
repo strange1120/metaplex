@@ -76,10 +76,11 @@ export const fetchCoder = async (
 ): Promise<anchor.Coder | null> => {
   //@ts-ignore
   return new anchor.Coder(
-    //@ts-ignore
-    await anchor.Program.fetchIdl(address, {
-      connection: connection,
-    } as anchor.Provider),
+    await anchor.Program.fetchIdl(
+      //@ts-ignore
+      address,
+      { connection: connection } as anchor.Provider,
+    ),
   );
 };
 
